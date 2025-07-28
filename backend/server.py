@@ -213,7 +213,8 @@ async def get_status_checks():
 
 # Include the routers in the main app
 app.include_router(api_router)
-app.include_router(automation_router)  # NEW: Automation Engine
+app.include_router(automation_router)  # Automation Engine
+app.include_router(ai_router)  # AI Marketing Engine
 
 app.add_middleware(
     CORSMiddleware,
