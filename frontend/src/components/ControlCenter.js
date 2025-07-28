@@ -359,16 +359,16 @@ export default function ControlCenter() {
               </Button>
 
               <Button 
-                onClick={() => navigate('/analytics')}
-                className="h-24 bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-serif font-bold flex flex-col items-center justify-center"
+                onClick={() => navigate('/easy-automation')}
+                className="h-24 bg-gradient-to-br from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white font-serif font-bold flex flex-col items-center justify-center"
               >
-                <BarChart3 className="h-6 w-6 mb-2" />
-                <span>Analytics Suite</span>
+                <Bot className="h-6 w-6 mb-2" />
+                <span>Easy Automation</span>
               </Button>
 
               <Button 
                 onClick={() => navigate('/saas')}
-                className="h-24 bg-gradient-to-br from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white font-serif font-bold flex flex-col items-center justify-center"
+                className="h-24 bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-serif font-bold flex flex-col items-center justify-center"
               >
                 <Settings className="h-6 w-6 mb-2" />
                 <span>SaaS Control</span>
