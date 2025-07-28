@@ -12,11 +12,20 @@ from models import PaymentDocument, PaymentStatus, PaymentResponse
 
 class PayPalService:
     def __init__(self):
+        # Load environment variables
+        from dotenv import load_dotenv
+        from pathlib import Path
+        
+        ROOT_DIR = Path(__file__).parent.parent
+        load_dotenv(ROOT_DIR / '.env')
+        
         self.client_id = os.getenv('PAYPAL_CLIENT_ID')
         self.client_secret = os.getenv('PAYPAL_CLIENT_SECRET')
         self.mode = os.getenv('PAYPAL_MODE', 'sandbox')
         
         if not self.client_id or not self.client_secret:
+            print(f"PayPal Client ID: {self.client_id}")
+            print(f"PayPal Client Secret: {self.client_secret}")
             raise ValueError("PayPal credentials not found in environment variables")
         
         # Initialize PayPal client
