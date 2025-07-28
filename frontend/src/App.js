@@ -7,6 +7,7 @@ import AutomationHub from "./components/AutomationHub";
 import Analytics from "./components/Analytics";
 import SaasLaunch from "./components/SaasLaunch";
 import ControlCenter from "./components/ControlCenter";
+import AutomationControl from "./components/AutomationControl";
 import "./App.css";
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/saas" element={<SaasLaunch />} />
           <Route path="/control" element={<ControlCenter />} />
+          <Route path="/automation-control" element={<AutomationControl />} />
         </Routes>
         <Toaster />
       </BrowserRouter>
