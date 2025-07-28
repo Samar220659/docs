@@ -16,19 +16,41 @@ import {
   BarChart3,
   Zap
 } from "lucide-react";
-import { mockData } from "../utils/mock";
+import { toast } from "sonner";
+import { dashboardApi } from "../services/api";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [stats, setStats] = useState(mockData.dashboardStats);
+  const [stats, setStats] = useState({
+    todayEarnings: "0.00",
+    todayGrowth: 0,
+    activeLeads: 0,
+    newLeads: 0,
+    conversionRate: 0,
+    activeAutomations: 0,
+    systemPerformance: 0
+  });
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Simulate loading
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    fetchDashboardStats();
   }, []);
+
+  const fetchDashboardStats = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const data = await dashboardApi.getStats();
+      setStats(data);
+    } catch (err) {
+      console.error('Error fetching dashboard stats:', err);
+      setError('Fehler beim Laden der Dashboard-Daten');
+      toast.error('Fehler beim Laden der Dashboard-Daten');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -40,6 +62,22 @@ export default function Dashboard() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-yellow-400 mx-auto mb-4"></div>
           <p className="text-white text-lg font-medium">ZZ-Lobby Elite lädt...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-400 text-lg font-medium mb-4">{error}</div>
+          <Button 
+            onClick={fetchDashboardStats}
+            className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-semibold"
+          >
+            Erneut versuchen
+          </Button>
         </div>
       </div>
     );
