@@ -6,6 +6,7 @@ import PayPalPayment from "./components/PayPalPayment";
 import AutomationHub from "./components/AutomationHub";
 import Analytics from "./components/Analytics";
 import SaasLaunch from "./components/SaasLaunch";
+import ControlCenter from "./components/ControlCenter";
 import "./App.css";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/automation" element={<AutomationHub />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/saas" element={<SaasLaunch />} />
+          <Route path="/control" element={<ControlCenter />} />
         </Routes>
         <Toaster />
       </BrowserRouter>

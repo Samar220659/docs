@@ -14,7 +14,8 @@ import {
   Play,
   Settings,
   BarChart3,
-  Zap
+  Zap,
+  Crown
 } from "lucide-react";
 import { toast } from "sonner";
 import { dashboardApi } from "../services/api";
@@ -98,10 +99,19 @@ export default function Dashboard() {
                 <p className="text-sm text-gray-400">Mobile SaaS Dashboard</p>
               </div>
             </div>
-            <Badge variant="secondary" className="bg-green-500/20 text-green-400 border-green-500/30">
-              <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-              LIVE
-            </Badge>
+            <div className="flex items-center gap-3">
+              <Button 
+                onClick={() => handleNavigation('/control')}
+                className="bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-semibold"
+              >
+                <Crown className="mr-2 h-4 w-4" />
+                Control Center
+              </Button>
+              <Badge variant="secondary" className="bg-green-500/20 text-green-400 border-green-500/30">
+                <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                LIVE
+              </Badge>
+            </div>
           </div>
         </div>
       </div>
