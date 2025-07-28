@@ -19,6 +19,9 @@ from models import (
 from services.paypal_service import paypal_service
 from services.database_service import db_service
 
+# Import automation engine
+from automation_engine import automation_router
+
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
@@ -28,7 +31,7 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 # Create the main app without a prefix
-app = FastAPI(title="ZZ-Lobby Elite API", version="1.0.0")
+app = FastAPI(title="ZZ-Lobby Elite API with Automation Engine", version="2.0.0")
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
@@ -48,6 +51,7 @@ class StatusCheckCreate(BaseModel):
 async def startup_event():
     await db_service.initialize_default_data()
     logging.info("Database initialized successfully")
+    logging.info("Automation Engine initialized successfully")
 
 # Dashboard API
 @api_router.get("/dashboard/stats", response_model=DashboardStatsResponse)
@@ -190,7 +194,7 @@ async def launch_saas_system():
 # Legacy endpoints
 @api_router.get("/")
 async def root():
-    return {"message": "ZZ-Lobby Elite API is running"}
+    return {"message": "ZZ-Lobby Elite API with Automation Engine is running"}
 
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
@@ -204,8 +208,9 @@ async def get_status_checks():
     status_checks = await db.status_checks.find().to_list(1000)
     return [StatusCheck(**status_check) for status_check in status_checks]
 
-# Include the router in the main app
+# Include the routers in the main app
 app.include_router(api_router)
+app.include_router(automation_router)  # NEW: Automation Engine
 
 app.add_middleware(
     CORSMiddleware,
