@@ -163,7 +163,7 @@ export default function ControlCenter() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Executive Overview */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-gradient-to-br from-amber-900/40 to-yellow-900/30 border-yellow-400/30 backdrop-blur-sm">
+          <Card className="bg-gradient-to-br from-amber-900/40 to-yellow-900/30 border-yellow-400/30 backdrop-blur-sm animate-pulse">
             <CardHeader className="pb-3">
               <CardTitle className="text-yellow-200 font-serif flex items-center gap-2">
                 <DollarSign className="h-5 w-5 text-yellow-400" />
@@ -177,6 +177,7 @@ export default function ControlCenter() {
                 <TrendingUp className="h-4 w-4 text-green-400" />
                 <span className="text-green-400 font-semibold">+{analytics?.revenue.growth || 0}%</span>
               </div>
+              <div className="mt-2 text-xs text-yellow-300">🚀 LIVE SYSTEM ACTIVE</div>
             </CardContent>
           </Card>
 
