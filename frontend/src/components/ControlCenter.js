@@ -24,7 +24,8 @@ import {
   Globe,
   Loader2,
   ChevronRight,
-  ArrowLeft
+  ArrowLeft,
+  Brain
 } from "lucide-react";
 import { toast } from "sonner";
 import { dashboardApi, paypalApi, automationApi, analyticsApi, saasApi } from "../services/api";
