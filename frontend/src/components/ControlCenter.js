@@ -268,11 +268,11 @@ export default function ControlCenter() {
                 </div>
               ))}
               <Button 
-                onClick={() => navigate('/automation')}
+                onClick={() => navigate('/automation-control')}
                 className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-serif font-semibold"
               >
-                <Settings className="mr-2 h-4 w-4" />
-                Full Automation Suite
+                <Bot className="mr-2 h-4 w-4" />
+                Digitaler Zwilling
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </CardContent>
