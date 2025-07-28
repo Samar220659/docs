@@ -22,6 +22,9 @@ from services.database_service import db_service
 # Import automation engine
 from automation_engine import automation_router
 
+# Import AI marketing engine
+from ai_marketing_engine import ai_router
+
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
