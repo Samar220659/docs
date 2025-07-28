@@ -13,31 +13,64 @@ import {
   BarChart3,
   PieChart,
   LineChart,
-  Activity
+  Activity,
+  Loader2
 } from "lucide-react";
-import { mockData } from "../utils/mock";
+import { analyticsApi } from "../services/api";
 
 export default function Analytics() {
   const navigate = useNavigate();
-  const [analytics, setAnalytics] = useState(mockData.analytics);
+  const [analytics, setAnalytics] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Simulate loading analytics data
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    fetchAnalytics();
   }, []);
+
+  const fetchAnalytics = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const data = await analyticsApi.getAnalytics();
+      setAnalytics(data);
+    } catch (err) {
+      console.error('Error fetching analytics:', err);
+      setError('Fehler beim Laden der Analytics');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-400 mx-auto mb-4"></div>
+          <Loader2 className="h-16 w-16 animate-spin text-green-400 mx-auto mb-4" />
           <p className="text-white text-lg font-medium">Analytics werden geladen...</p>
         </div>
       </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-400 text-lg font-medium mb-4">{error}</div>
+          <Button 
+            onClick={fetchAnalytics}
+            className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+          >
+            Erneut versuchen
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!analytics) {
+    return null;
   }
 
   return (
@@ -60,10 +93,20 @@ export default function Analytics() {
                 <p className="text-sm text-gray-400">Live Performance Dashboard</p>
               </div>
             </div>
-            <Badge variant="secondary" className="bg-green-500/20 text-green-400 border-green-500/30">
-              <Activity className="w-3 h-3 mr-2" />
-              Live
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={fetchAnalytics}
+                className="text-white hover:bg-white/10"
+              >
+                Aktualisieren
+              </Button>
+              <Badge variant="secondary" className="bg-green-500/20 text-green-400 border-green-500/30">
+                <Activity className="w-3 h-3 mr-2" />
+                Live
+              </Badge>
+            </div>
           </div>
         </div>
       </div>

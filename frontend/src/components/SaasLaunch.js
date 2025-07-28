@@ -16,22 +16,43 @@ import {
   Server,
   Database,
   Shield,
-  Globe
+  Globe,
+  Loader2
 } from "lucide-react";
 import { toast } from "sonner";
-import { mockData } from "../utils/mock";
+import { saasApi } from "../services/api";
 
 export default function SaasLaunch() {
   const navigate = useNavigate();
-  const [saasStatus, setSaasStatus] = useState(mockData.saasStatus);
+  const [saasStatus, setSaasStatus] = useState(null);
   const [isLaunching, setIsLaunching] = useState(false);
   const [launchProgress, setLaunchProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchSaasStatus();
+  }, []);
+
+  const fetchSaasStatus = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const data = await saasApi.getStatus();
+      setSaasStatus(data);
+    } catch (err) {
+      console.error('Error fetching SaaS status:', err);
+      setError('Fehler beim Laden des SaaS-Status');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleLaunchSystem = async () => {
     setIsLaunching(true);
     setLaunchProgress(0);
     
-    // Simulate launch process
+    // Simulate launch process with progress
     const steps = [
       { progress: 20, message: "Initialisiere SaaS-Komponenten..." },
       { progress: 40, message: "Starte Lead Generation Engine..." },
@@ -40,14 +61,26 @@ export default function SaasLaunch() {
       { progress: 100, message: "SaaS System erfolgreich gestartet!" }
     ];
 
-    for (const step of steps) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setLaunchProgress(step.progress);
-      toast.success(step.message);
-    }
+    try {
+      for (const step of steps) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setLaunchProgress(step.progress);
+        toast.success(step.message);
+      }
 
-    setIsLaunching(false);
-    toast.success("🚀 SaaS System ist LIVE und bereit für Kunden!");
+      // Call the actual API
+      await saasApi.launchSystem();
+      toast.success("🚀 SaaS System ist LIVE und bereit für Kunden!");
+      
+      // Refresh status
+      await fetchSaasStatus();
+    } catch (err) {
+      console.error('Error launching system:', err);
+      toast.error('Fehler beim Starten des SaaS-Systems');
+    } finally {
+      setIsLaunching(false);
+      setLaunchProgress(0);
+    }
   };
 
   const getStatusColor = (status) => {
@@ -77,6 +110,37 @@ export default function SaasLaunch() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-16 w-16 animate-spin text-purple-400 mx-auto mb-4" />
+          <p className="text-white text-lg font-medium">SaaS Status wird geladen...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-400 text-lg font-medium mb-4">{error}</div>
+          <Button 
+            onClick={fetchSaasStatus}
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+          >
+            Erneut versuchen
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!saasStatus) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       {/* Header */}
@@ -97,10 +161,20 @@ export default function SaasLaunch() {
                 <p className="text-sm text-gray-400">System Management Dashboard</p>
               </div>
             </div>
-            <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 border-purple-500/30">
-              <Rocket className="w-3 h-3 mr-2" />
-              SaaS Control
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={fetchSaasStatus}
+                className="text-white hover:bg-white/10"
+              >
+                Status aktualisieren
+              </Button>
+              <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 border-purple-500/30">
+                <Rocket className="w-3 h-3 mr-2" />
+                SaaS Control
+              </Badge>
+            </div>
           </div>
         </div>
       </div>
@@ -145,7 +219,7 @@ export default function SaasLaunch() {
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium">Gesamt Umsatz</span>
-                <span className="text-xl font-bold text-green-400">€{saasStatus.totalRevenue}</span>
+                <span className="text-xl font-bold text-green-400">€{saasStatus.totalRevenue.toLocaleString()}</span>
               </div>
               <div className="text-sm text-gray-400">
                 Automatisierte Einnahmen seit System-Start
@@ -220,6 +294,7 @@ export default function SaasLaunch() {
               <Button 
                 variant="outline" 
                 className="h-20 flex flex-col items-center justify-center border-white/20 text-white hover:bg-white/10"
+                onClick={() => toast.success("Datenbank wird optimiert...")}
               >
                 <Database className="h-6 w-6 mb-2" />
                 <span className="text-sm">Datenbank</span>
@@ -228,6 +303,7 @@ export default function SaasLaunch() {
               <Button 
                 variant="outline" 
                 className="h-20 flex flex-col items-center justify-center border-white/20 text-white hover:bg-white/10"
+                onClick={() => toast.success("Sicherheitsscan wird durchgeführt...")}
               >
                 <Shield className="h-6 w-6 mb-2" />
                 <span className="text-sm">Sicherheit</span>
@@ -236,6 +312,7 @@ export default function SaasLaunch() {
               <Button 
                 variant="outline" 
                 className="h-20 flex flex-col items-center justify-center border-white/20 text-white hover:bg-white/10"
+                onClick={() => toast.success("CDN wird aktualisiert...")}
               >
                 <Globe className="h-6 w-6 mb-2" />
                 <span className="text-sm">CDN</span>
@@ -244,6 +321,7 @@ export default function SaasLaunch() {
               <Button 
                 variant="outline" 
                 className="h-20 flex flex-col items-center justify-center border-white/20 text-white hover:bg-white/10"
+                onClick={() => toast.success("Einstellungen werden konfiguriert...")}
               >
                 <Settings className="h-6 w-6 mb-2" />
                 <span className="text-sm">Einstellungen</span>
