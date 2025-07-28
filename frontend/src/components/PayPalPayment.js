@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -13,17 +13,40 @@ import {
   Share2, 
   CheckCircle,
   CreditCard,
-  Link
+  Link,
+  Loader2
 } from "lucide-react";
 import { toast } from "sonner";
-import { mockData } from "../utils/mock";
+import { paypalApi } from "../services/api";
 
 export default function PayPalPayment() {
   const navigate = useNavigate();
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [generatedPayment, setGeneratedPayment] = useState(null);
+  const [recentPayments, setRecentPayments] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchRecentPayments();
+  }, []);
+
+  const fetchRecentPayments = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const payments = await paypalApi.getPayments();
+      setRecentPayments(payments);
+    } catch (err) {
+      console.error('Error fetching payments:', err);
+      setError('Fehler beim Laden der Zahlungen');
+      toast.error('Fehler beim Laden der Zahlungen');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleGeneratePayment = async () => {
     if (!amount || parseFloat(amount) <= 0) {
@@ -33,51 +56,19 @@ export default function PayPalPayment() {
 
     setIsGenerating(true);
     
-    // Simulate payment generation
-    setTimeout(() => {
-      const paymentData = {
-        id: `PAY-${Date.now()}`,
-        amount: parseFloat(amount),
-        description: description || "ZZ-Lobby Elite Payment",
-        paymentUrl: mockData.paymentLinks.find(p => p.amount === parseFloat(amount))?.url || 
-                   `https://paypal.me/zzlobby/${amount}EUR`,
-        qrCode: `data:image/svg+xml;base64,${btoa(`
-          <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-            <rect width="200" height="200" fill="white"/>
-            <g fill="black">
-              <rect x="20" y="20" width="10" height="10"/>
-              <rect x="30" y="20" width="10" height="10"/>
-              <rect x="50" y="20" width="10" height="10"/>
-              <rect x="70" y="20" width="10" height="10"/>
-              <rect x="90" y="20" width="10" height="10"/>
-              <rect x="110" y="20" width="10" height="10"/>
-              <rect x="130" y="20" width="10" height="10"/>
-              <rect x="150" y="20" width="10" height="10"/>
-              <rect x="170" y="20" width="10" height="10"/>
-              <rect x="20" y="30" width="10" height="10"/>
-              <rect x="50" y="30" width="10" height="10"/>
-              <rect x="90" y="30" width="10" height="10"/>
-              <rect x="130" y="30" width="10" height="10"/>
-              <rect x="170" y="30" width="10" height="10"/>
-              <rect x="20" y="50" width="10" height="10"/>
-              <rect x="40" y="50" width="10" height="10"/>
-              <rect x="70" y="50" width="10" height="10"/>
-              <rect x="100" y="50" width="10" height="10"/>
-              <rect x="130" y="50" width="10" height="10"/>
-              <rect x="160" y="50" width="10" height="10"/>
-              <text x="100" y="100" text-anchor="middle" font-size="12" fill="black">€${amount}</text>
-              <text x="100" y="120" text-anchor="middle" font-size="8" fill="black">ZZ-Lobby Elite</text>
-            </g>
-          </svg>
-        `)}`,
-        createdAt: new Date().toISOString(),
-        status: "active"
-      };
-      
+    try {
+      const paymentData = await paypalApi.createPayment(amount, description);
       setGeneratedPayment(paymentData);
-      setIsGenerating(false);
       toast.success("Payment-Link erfolgreich generiert!");
-    }, 1500);
+      
+      // Refresh recent payments
+      await fetchRecentPayments();
+    } catch (err) {
+      console.error('Error creating payment:', err);
+      toast.error("Fehler beim Erstellen des Payments");
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const handleCopyLink = () => {
@@ -94,6 +85,36 @@ export default function PayPalPayment() {
       });
     } else {
       handleCopyLink();
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('de-DE', {
+      day: '2-digit',
+      month: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'completed': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'pending': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'active': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'failed': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+    }
+  };
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'completed': return 'Abgeschlossen';
+      case 'pending': return 'Ausstehend';
+      case 'active': return 'Aktiv';
+      case 'failed': return 'Fehlgeschlagen';
+      default: return 'Unbekannt';
     }
   };
 
@@ -167,12 +188,12 @@ export default function PayPalPayment() {
 
               <Button 
                 onClick={handleGeneratePayment}
-                disabled={isGenerating}
+                disabled={isGenerating || !amount || parseFloat(amount) <= 0}
                 className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-semibold h-12"
               >
                 {isGenerating ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black mr-2"></div>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Generiere Payment...
                   </>
                 ) : (
@@ -223,8 +244,8 @@ export default function PayPalPayment() {
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-400">Status:</span>
-                        <Badge variant="secondary" className="bg-green-500/20 text-green-400 border-green-500/30">
-                          {generatedPayment.status}
+                        <Badge variant="secondary" className={getStatusColor(generatedPayment.status)}>
+                          {getStatusText(generatedPayment.status)}
                         </Badge>
                       </div>
                     </div>
@@ -257,7 +278,11 @@ export default function PayPalPayment() {
                         Teilen
                       </Button>
                       <Button 
-                        onClick={() => setGeneratedPayment(null)}
+                        onClick={() => {
+                          setGeneratedPayment(null);
+                          setAmount("");
+                          setDescription("");
+                        }}
                         variant="outline"
                         className="flex-1 border-white/20 text-white hover:bg-white/10"
                       >
@@ -278,30 +303,61 @@ export default function PayPalPayment() {
             <CardTitle className="flex items-center gap-2">
               <Link className="h-5 w-5 text-blue-400" />
               Kürzliche Zahlungen
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={fetchRecentPayments}
+                className="ml-auto text-white hover:bg-white/10"
+              >
+                Aktualisieren
+              </Button>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {mockData.paymentLinks.map((payment, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-black/40 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center">
-                      <DollarSign className="h-5 w-5 text-black" />
+            {isLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-6 w-6 animate-spin text-blue-400" />
+              </div>
+            ) : error ? (
+              <div className="text-center py-8">
+                <p className="text-red-400 mb-4">{error}</p>
+                <Button 
+                  onClick={fetchRecentPayments}
+                  variant="outline"
+                  className="border-white/20 text-white hover:bg-white/10"
+                >
+                  Erneut versuchen
+                </Button>
+              </div>
+            ) : recentPayments.length === 0 ? (
+              <div className="text-center py-8 text-gray-400">
+                Keine Zahlungen vorhanden
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {recentPayments.map((payment) => (
+                  <div key={payment.id} className="flex items-center justify-between p-3 bg-black/40 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center">
+                        <DollarSign className="h-5 w-5 text-black" />
+                      </div>
+                      <div>
+                        <div className="font-medium">€{payment.amount}</div>
+                        <div className="text-sm text-gray-400">{payment.description}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="font-medium">€{payment.amount}</div>
-                      <div className="text-sm text-gray-400">{payment.description}</div>
+                    <div className="text-right">
+                      <Badge variant="secondary" className={getStatusColor(payment.status) + " mb-1"}>
+                        {getStatusText(payment.status)}
+                      </Badge>
+                      <div className="text-xs text-gray-500">
+                        {formatDate(payment.createdAt)}
+                      </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <Badge variant="secondary" className="bg-green-500/20 text-green-400 border-green-500/30 mb-1">
-                      {payment.status}
-                    </Badge>
-                    <div className="text-xs text-gray-500">{payment.createdAt}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

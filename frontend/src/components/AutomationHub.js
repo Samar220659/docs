@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -17,37 +17,87 @@ import {
   Pause,
   TrendingUp,
   Target,
-  Zap
+  Zap,
+  Loader2
 } from "lucide-react";
 import { toast } from "sonner";
-import { mockData } from "../utils/mock";
+import { automationApi } from "../services/api";
 
 export default function AutomationHub() {
   const navigate = useNavigate();
-  const [automations, setAutomations] = useState(mockData.automations);
+  const [automations, setAutomations] = useState([]);
   const [isOptimizing, setIsOptimizing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [togglingIds, setTogglingIds] = useState(new Set());
 
-  const handleToggleAutomation = (id) => {
-    setAutomations(prev => 
-      prev.map(automation => 
-        automation.id === id 
-          ? { ...automation, active: !automation.active }
-          : automation
-      )
-    );
-    
-    const automation = automations.find(a => a.id === id);
-    if (automation) {
-      toast.success(`${automation.name} ${automation.active ? 'deaktiviert' : 'aktiviert'}`);
+  useEffect(() => {
+    fetchAutomations();
+  }, []);
+
+  const fetchAutomations = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const data = await automationApi.getAutomations();
+      setAutomations(data);
+    } catch (err) {
+      console.error('Error fetching automations:', err);
+      setError('Fehler beim Laden der Automationen');
+      toast.error('Fehler beim Laden der Automationen');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleOptimizeSystem = () => {
+  const handleToggleAutomation = async (id) => {
+    if (togglingIds.has(id)) return;
+
+    const automation = automations.find(a => a.id === id);
+    if (!automation) return;
+
+    setTogglingIds(prev => new Set(prev).add(id));
+
+    try {
+      await automationApi.toggleAutomation(id, !automation.active);
+      
+      // Update local state
+      setAutomations(prev => 
+        prev.map(a => 
+          a.id === id 
+            ? { ...a, active: !a.active, status: !a.active ? 'active' : 'inactive' }
+            : a
+        )
+      );
+      
+      toast.success(`${automation.name} ${automation.active ? 'deaktiviert' : 'aktiviert'}`);
+    } catch (err) {
+      console.error('Error toggling automation:', err);
+      toast.error('Fehler beim Umschalten der Automation');
+    } finally {
+      setTogglingIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(id);
+        return newSet;
+      });
+    }
+  };
+
+  const handleOptimizeSystem = async () => {
     setIsOptimizing(true);
-    setTimeout(() => {
-      setIsOptimizing(false);
+    
+    try {
+      await automationApi.optimizeSystem();
       toast.success("System erfolgreich optimiert!");
-    }, 3000);
+      
+      // Refresh automations data
+      await fetchAutomations();
+    } catch (err) {
+      console.error('Error optimizing system:', err);
+      toast.error('Fehler beim Optimieren des Systems');
+    } finally {
+      setIsOptimizing(false);
+    }
   };
 
   const getStatusColor = (status) => {
@@ -67,6 +117,47 @@ export default function AutomationHub() {
       default: return 'Unbekannt';
     }
   };
+
+  const getIconComponent = (type) => {
+    switch (type) {
+      case 'lead-capture': return Users;
+      case 'social-media': return Share2;
+      case 'email-marketing': return Mail;
+      case 'affiliate-marketing': return DollarSign;
+      case 'ai-content': return Bot;
+      default: return Bot;
+    }
+  };
+
+  const activeCount = automations.filter(a => a.active).length;
+  const totalGenerated = automations.reduce((acc, a) => acc + (a.active ? 1 : 0), 0);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-16 w-16 animate-spin text-blue-400 mx-auto mb-4" />
+          <p className="text-white text-lg font-medium">Automationen werden geladen...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-400 text-lg font-medium mb-4">{error}</div>
+          <Button 
+            onClick={fetchAutomations}
+            className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+          >
+            Erneut versuchen
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
@@ -109,7 +200,7 @@ export default function AutomationHub() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-400 mb-2">
-                  {automations.filter(a => a.active).length}/5
+                  {activeCount}/{automations.length}
                 </div>
                 <div className="text-sm text-gray-400">Aktive Automationen</div>
               </div>
@@ -138,7 +229,7 @@ export default function AutomationHub() {
             >
               {isOptimizing ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black mr-2"></div>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   System wird optimiert...
                 </>
               ) : (
@@ -153,72 +244,83 @@ export default function AutomationHub() {
 
         {/* Automation Controls */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {automations.map((automation) => (
-            <Card key={automation.id} className="bg-black/40 border-white/10">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center gap-2">
-                    <automation.icon className="h-5 w-5" style={{ color: automation.color }} />
-                    {automation.name}
-                  </CardTitle>
-                  <Switch
-                    checked={automation.active}
-                    onCheckedChange={() => handleToggleAutomation(automation.id)}
-                  />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <p className="text-sm text-gray-400">{automation.description}</p>
-                  
+          {automations.map((automation) => {
+            const IconComponent = getIconComponent(automation.type);
+            const isToggling = togglingIds.has(automation.id);
+            
+            return (
+              <Card key={automation.id} className="bg-black/40 border-white/10">
+                <CardHeader>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Status:</span>
-                    <Badge variant="secondary" className={getStatusColor(automation.status)}>
-                      {getStatusText(automation.status)}
-                    </Badge>
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span>Performance:</span>
-                      <span className="font-medium">{automation.performance}%</span>
-                    </div>
-                    <Progress value={automation.performance} className="h-2" />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <div className="text-gray-400">Heute generiert:</div>
-                      <div className="font-medium">{automation.todayGenerated}</div>
-                    </div>
-                    <div>
-                      <div className="text-gray-400">Erfolgsrate:</div>
-                      <div className="font-medium text-green-400">{automation.successRate}%</div>
+                    <CardTitle className="flex items-center gap-2">
+                      <IconComponent className="h-5 w-5" style={{ color: automation.color }} />
+                      {automation.name}
+                    </CardTitle>
+                    <div className="relative">
+                      <Switch
+                        checked={automation.active}
+                        onCheckedChange={() => handleToggleAutomation(automation.id)}
+                        disabled={isToggling}
+                      />
+                      {isToggling && (
+                        <Loader2 className="absolute inset-0 h-4 w-4 animate-spin text-blue-400" />
+                      )}
                     </div>
                   </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <p className="text-sm text-gray-400">{automation.description}</p>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Status:</span>
+                      <Badge variant="secondary" className={getStatusColor(automation.status)}>
+                        {getStatusText(automation.status)}
+                      </Badge>
+                    </div>
 
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="flex-1 border-white/20 text-white hover:bg-white/10"
-                    >
-                      <Settings className="mr-2 h-3 w-3" />
-                      Konfigurieren
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="flex-1 border-white/20 text-white hover:bg-white/10"
-                    >
-                      <TrendingUp className="mr-2 h-3 w-3" />
-                      Statistiken
-                    </Button>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span>Performance:</span>
+                        <span className="font-medium">{automation.performance}%</span>
+                      </div>
+                      <Progress value={automation.performance} className="h-2" />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <div className="text-gray-400">Heute generiert:</div>
+                        <div className="font-medium">{automation.todayGenerated}</div>
+                      </div>
+                      <div>
+                        <div className="text-gray-400">Erfolgsrate:</div>
+                        <div className="font-medium text-green-400">{automation.successRate}%</div>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="flex-1 border-white/20 text-white hover:bg-white/10"
+                      >
+                        <Settings className="mr-2 h-3 w-3" />
+                        Konfigurieren
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="flex-1 border-white/20 text-white hover:bg-white/10"
+                      >
+                        <TrendingUp className="mr-2 h-3 w-3" />
+                        Statistiken
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
         {/* Quick Actions */}
@@ -234,6 +336,14 @@ export default function AutomationHub() {
               <Button 
                 variant="outline" 
                 className="h-16 flex flex-col items-center justify-center border-white/20 text-white hover:bg-white/10"
+                onClick={() => {
+                  // Toggle all automations to active
+                  automations.forEach(automation => {
+                    if (!automation.active) {
+                      handleToggleAutomation(automation.id);
+                    }
+                  });
+                }}
               >
                 <Play className="h-6 w-6 mb-1" />
                 <span className="text-sm">Alle starten</span>
@@ -241,6 +351,14 @@ export default function AutomationHub() {
               <Button 
                 variant="outline" 
                 className="h-16 flex flex-col items-center justify-center border-white/20 text-white hover:bg-white/10"
+                onClick={() => {
+                  // Toggle all automations to inactive
+                  automations.forEach(automation => {
+                    if (automation.active) {
+                      handleToggleAutomation(automation.id);
+                    }
+                  });
+                }}
               >
                 <Pause className="h-6 w-6 mb-1" />
                 <span className="text-sm">Alle pausieren</span>
@@ -248,6 +366,8 @@ export default function AutomationHub() {
               <Button 
                 variant="outline" 
                 className="h-16 flex flex-col items-center justify-center border-white/20 text-white hover:bg-white/10"
+                onClick={handleOptimizeSystem}
+                disabled={isOptimizing}
               >
                 <Settings className="h-6 w-6 mb-1" />
                 <span className="text-sm">Bulk-Konfiguration</span>
