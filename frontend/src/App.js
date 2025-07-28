@@ -8,6 +8,7 @@ import Analytics from "./components/Analytics";
 import SaasLaunch from "./components/SaasLaunch";
 import ControlCenter from "./components/ControlCenter";
 import AutomationControl from "./components/AutomationControl";
+import EasyAutomation from "./components/EasyAutomation";
 import "./App.css";
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route path="/saas" element={<SaasLaunch />} />
           <Route path="/control" element={<ControlCenter />} />
           <Route path="/automation-control" element={<AutomationControl />} />
+          <Route path="/easy-automation" element={<EasyAutomation />} />
         </Routes>
         <Toaster />
       </BrowserRouter>
