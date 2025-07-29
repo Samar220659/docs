@@ -95,6 +95,34 @@ export default function AutomationControl() {
     }
   };
 
+  const handleConnectSocialMedia = async (platform) => {
+    try {
+      // Simulate connection process
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      switch (platform) {
+        case 'facebook':
+          setSocialConfig(prev => ({...prev, facebook_connected: true}));
+          toast.success('🎉 Facebook erfolgreich verbunden!');
+          break;
+        case 'instagram':
+          setSocialConfig(prev => ({...prev, instagram_connected: true}));
+          toast.success('🎉 Instagram erfolgreich verbunden!');
+          break;
+        case 'linkedin':
+          setSocialConfig(prev => ({...prev, linkedin_connected: true}));
+          toast.success('🎉 LinkedIn erfolgreich verbunden!');
+          break;
+        case 'whatsapp':
+          setSocialConfig(prev => ({...prev, whatsapp_connected: true}));
+          toast.success('🎉 WhatsApp Business erfolgreich verbunden!');
+          break;
+      }
+    } catch (error) {
+      toast.error(`Fehler beim Verbinden mit ${platform}`);
+    }
+  };
+
   const handleRunCampaign = async () => {
     setIsRunningCampaign(true);
     try {
