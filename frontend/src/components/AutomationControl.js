@@ -195,84 +195,299 @@ export default function AutomationControl() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* API Configuration */}
-        <Card className="bg-black/40 border-yellow-400/20 backdrop-blur-sm mb-8">
+        {/* Social Media Logins */}
+        <Card className="bg-black/40 border-yellow-400/20 backdrop-blur-sm mb-6">
           <CardHeader>
             <CardTitle className="text-yellow-200 font-serif flex items-center gap-2">
               <Settings className="h-5 w-5 text-yellow-400" />
-              API Konfiguration
+              Social Media Accounts
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label className="text-yellow-200 font-serif">WhatsApp Business API Key</Label>
-                <Input
-                  type="password"
-                  value={config.whatsapp_api_key}
-                  onChange={(e) => setConfig({...config, whatsapp_api_key: e.target.value})}
-                  className="bg-black/40 border-yellow-400/20 text-white"
-                  placeholder="Ihr WhatsApp API Key"
-                />
+            {/* Facebook Login */}
+            <div className="p-4 bg-black/40 rounded-lg border border-blue-500/20">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <Share2 className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-blue-200 font-serif font-semibold">Facebook</h3>
+                    <p className="text-xs text-gray-400">Automatische Posts & Marketing</p>
+                  </div>
+                </div>
+                <Badge className={socialConfig.facebook_connected ? 'bg-green-500/20 text-green-400 border-green-500/30' : 'bg-gray-500/20 text-gray-400 border-gray-500/30'}>
+                  {socialConfig.facebook_connected ? 'Verbunden' : 'Nicht verbunden'}
+                </Badge>
               </div>
-              <div>
-                <Label className="text-yellow-200 font-serif">Facebook Access Token</Label>
-                <Input
-                  type="password"
-                  value={config.facebook_access_token}
-                  onChange={(e) => setConfig({...config, facebook_access_token: e.target.value})}
-                  className="bg-black/40 border-yellow-400/20 text-white"
-                  placeholder="Ihr Facebook Token"
-                />
-              </div>
-              <div>
-                <Label className="text-yellow-200 font-serif">LinkedIn Access Token</Label>
-                <Input
-                  type="password"
-                  value={config.linkedin_access_token}
-                  onChange={(e) => setConfig({...config, linkedin_access_token: e.target.value})}
-                  className="bg-black/40 border-yellow-400/20 text-white"
-                  placeholder="Ihr LinkedIn Token"
-                />
-              </div>
-              <div>
-                <Label className="text-yellow-200 font-serif">Daily Message Limit</Label>
-                <Input
-                  type="number"
-                  value={config.daily_message_limit}
-                  onChange={(e) => setConfig({...config, daily_message_limit: parseInt(e.target.value)})}
-                  className="bg-black/40 border-yellow-400/20 text-white"
-                  placeholder="50"
-                />
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <Switch
-                checked={config.auto_marketing_enabled}
-                onCheckedChange={(checked) => setConfig({...config, auto_marketing_enabled: checked})}
-                className="data-[state=checked]:bg-yellow-400"
-              />
-              <Label className="text-yellow-200 font-serif">Auto-Marketing aktivieren</Label>
+              
+              {!socialConfig.facebook_connected ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <Label className="text-blue-200 font-serif text-sm">E-Mail / Benutzername</Label>
+                    <Input
+                      type="email"
+                      value={socialConfig.facebook_email}
+                      onChange={(e) => setSocialConfig({...socialConfig, facebook_email: e.target.value})}
+                      className="bg-black/40 border-blue-500/20 text-white text-sm"
+                      placeholder="ihre@email.com"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-blue-200 font-serif text-sm">Passwort</Label>
+                    <Input
+                      type="password"
+                      value={socialConfig.facebook_password}
+                      onChange={(e) => setSocialConfig({...socialConfig, facebook_password: e.target.value})}
+                      className="bg-black/40 border-blue-500/20 text-white text-sm"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-400" />
+                    <span className="text-green-200 text-sm">Facebook erfolgreich verbunden</span>
+                  </div>
+                  <Button
+                    onClick={() => setSocialConfig({...socialConfig, facebook_connected: false, facebook_email: '', facebook_password: ''})}
+                    variant="outline"
+                    size="sm"
+                    className="border-red-500/20 text-red-400 hover:bg-red-500/10"
+                  >
+                    Trennen
+                  </Button>
+                </div>
+              )}
+              
+              {!socialConfig.facebook_connected && (
+                <Button 
+                  onClick={() => handleConnectSocialMedia('facebook')}
+                  disabled={!socialConfig.facebook_email || !socialConfig.facebook_password}
+                  className="w-full mt-3 bg-blue-600 hover:bg-blue-700 text-white font-serif"
+                >
+                  <Share2 className="mr-2 h-4 w-4" />
+                  Mit Facebook Verbinden
+                </Button>
+              )}
             </div>
 
-            <Button 
-              onClick={handleConfigureAutomation}
-              disabled={isConfiguring}
-              className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-serif font-semibold"
-            >
-              {isConfiguring ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Konfiguriere...
-                </>
+            {/* Instagram Login */}
+            <div className="p-4 bg-black/40 rounded-lg border border-pink-500/20">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                    <Share2 className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-pink-200 font-serif font-semibold">Instagram</h3>
+                    <p className="text-xs text-gray-400">Stories, Posts & Engagement</p>
+                  </div>
+                </div>
+                <Badge className={socialConfig.instagram_connected ? 'bg-green-500/20 text-green-400 border-green-500/30' : 'bg-gray-500/20 text-gray-400 border-gray-500/30'}>
+                  {socialConfig.instagram_connected ? 'Verbunden' : 'Nicht verbunden'}
+                </Badge>
+              </div>
+              
+              {!socialConfig.instagram_connected ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <Label className="text-pink-200 font-serif text-sm">Instagram Username</Label>
+                    <Input
+                      type="text"
+                      value={socialConfig.instagram_username}
+                      onChange={(e) => setSocialConfig({...socialConfig, instagram_username: e.target.value})}
+                      className="bg-black/40 border-pink-500/20 text-white text-sm"
+                      placeholder="@username"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-pink-200 font-serif text-sm">Passwort</Label>
+                    <Input
+                      type="password"
+                      value={socialConfig.instagram_password}
+                      onChange={(e) => setSocialConfig({...socialConfig, instagram_password: e.target.value})}
+                      className="bg-black/40 border-pink-500/20 text-white text-sm"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                </div>
               ) : (
-                <>
-                  <Settings className="mr-2 h-4 w-4" />
-                  Automation Konfigurieren
-                </>
+                <div className="flex items-center justify-between p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-400" />
+                    <span className="text-green-200 text-sm">Instagram erfolgreich verbunden</span>
+                  </div>
+                  <Button
+                    onClick={() => setSocialConfig({...socialConfig, instagram_connected: false, instagram_username: '', instagram_password: ''})}
+                    variant="outline"
+                    size="sm"
+                    className="border-red-500/20 text-red-400 hover:bg-red-500/10"
+                  >
+                    Trennen
+                  </Button>
+                </div>
               )}
-            </Button>
+              
+              {!socialConfig.instagram_connected && (
+                <Button 
+                  onClick={() => handleConnectSocialMedia('instagram')}
+                  disabled={!socialConfig.instagram_username || !socialConfig.instagram_password}
+                  className="w-full mt-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-serif"
+                >
+                  <Share2 className="mr-2 h-4 w-4" />
+                  Mit Instagram Verbinden
+                </Button>
+              )}
+            </div>
+
+            {/* LinkedIn Login */}
+            <div className="p-4 bg-black/40 rounded-lg border border-blue-700/20">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center">
+                    <Share2 className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-blue-300 font-serif font-semibold">LinkedIn</h3>
+                    <p className="text-xs text-gray-400">Professionelle Posts & Networking</p>
+                  </div>
+                </div>
+                <Badge className={socialConfig.linkedin_connected ? 'bg-green-500/20 text-green-400 border-green-500/30' : 'bg-gray-500/20 text-gray-400 border-gray-500/30'}>
+                  {socialConfig.linkedin_connected ? 'Verbunden' : 'Nicht verbunden'}
+                </Badge>
+              </div>
+              
+              {!socialConfig.linkedin_connected ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <Label className="text-blue-300 font-serif text-sm">LinkedIn E-Mail</Label>
+                    <Input
+                      type="email"
+                      value={socialConfig.linkedin_email}
+                      onChange={(e) => setSocialConfig({...socialConfig, linkedin_email: e.target.value})}
+                      className="bg-black/40 border-blue-700/20 text-white text-sm"
+                      placeholder="ihre@email.com"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-blue-300 font-serif text-sm">Passwort</Label>
+                    <Input
+                      type="password"
+                      value={socialConfig.linkedin_password}
+                      onChange={(e) => setSocialConfig({...socialConfig, linkedin_password: e.target.value})}
+                      className="bg-black/40 border-blue-700/20 text-white text-sm"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-400" />
+                    <span className="text-green-200 text-sm">LinkedIn erfolgreich verbunden</span>
+                  </div>
+                  <Button
+                    onClick={() => setSocialConfig({...socialConfig, linkedin_connected: false, linkedin_email: '', linkedin_password: ''})}
+                    variant="outline"
+                    size="sm"
+                    className="border-red-500/20 text-red-400 hover:bg-red-500/10"
+                  >
+                    Trennen
+                  </Button>
+                </div>
+              )}
+              
+              {!socialConfig.linkedin_connected && (
+                <Button 
+                  onClick={() => handleConnectSocialMedia('linkedin')}
+                  disabled={!socialConfig.linkedin_email || !socialConfig.linkedin_password}
+                  className="w-full mt-3 bg-blue-700 hover:bg-blue-800 text-white font-serif"
+                >
+                  <Share2 className="mr-2 h-4 w-4" />
+                  Mit LinkedIn Verbinden
+                </Button>
+              )}
+            </div>
+
+            {/* WhatsApp Business */}
+            <div className="p-4 bg-black/40 rounded-lg border border-green-500/20">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                    <MessageCircle className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-green-200 font-serif font-semibold">WhatsApp Business</h3>
+                    <p className="text-xs text-gray-400">Automatische Nachrichten & Marketing</p>
+                  </div>
+                </div>
+                <Badge className={socialConfig.whatsapp_connected ? 'bg-green-500/20 text-green-400 border-green-500/30' : 'bg-gray-500/20 text-gray-400 border-gray-500/30'}>
+                  {socialConfig.whatsapp_connected ? 'Verbunden' : 'Nicht verbunden'}
+                </Badge>
+              </div>
+              
+              {!socialConfig.whatsapp_connected ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <Label className="text-green-200 font-serif text-sm">Telefonnummer</Label>
+                    <Input
+                      type="tel"
+                      value={socialConfig.whatsapp_phone}
+                      onChange={(e) => setSocialConfig({...socialConfig, whatsapp_phone: e.target.value})}
+                      className="bg-black/40 border-green-500/20 text-white text-sm"
+                      placeholder="+49 123 456 789"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-green-200 font-serif text-sm">Verifizierungscode</Label>
+                    <Input
+                      type="text"
+                      value={socialConfig.whatsapp_code}
+                      onChange={(e) => setSocialConfig({...socialConfig, whatsapp_code: e.target.value})}
+                      className="bg-black/40 border-green-500/20 text-white text-sm"
+                      placeholder="123456"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-400" />
+                    <span className="text-green-200 text-sm">WhatsApp Business verbunden</span>
+                  </div>
+                  <Button
+                    onClick={() => setSocialConfig({...socialConfig, whatsapp_connected: false, whatsapp_phone: '', whatsapp_code: ''})}
+                    variant="outline"
+                    size="sm"
+                    className="border-red-500/20 text-red-400 hover:bg-red-500/10"
+                  >
+                    Trennen
+                  </Button>
+                </div>
+              )}
+              
+              {!socialConfig.whatsapp_connected && (
+                <Button 
+                  onClick={() => handleConnectSocialMedia('whatsapp')}
+                  disabled={!socialConfig.whatsapp_phone || !socialConfig.whatsapp_code}
+                  className="w-full mt-3 bg-green-500 hover:bg-green-600 text-white font-serif"
+                >
+                  <MessageCircle className="mr-2 h-4 w-4" />
+                  WhatsApp Verbinden
+                </Button>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-4 pt-4">
+              <Switch
+                checked={socialConfig.auto_posting_enabled}
+                onCheckedChange={(checked) => setSocialConfig({...socialConfig, auto_posting_enabled: checked})}
+                className="data-[state=checked]:bg-yellow-400"
+              />
+              <Label className="text-yellow-200 font-serif">Automatisches Posten aktivieren</Label>
+            </div>
           </CardContent>
         </Card>
 
