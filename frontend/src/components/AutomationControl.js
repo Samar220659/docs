@@ -43,6 +43,22 @@ export default function AutomationControl() {
     auto_response_enabled: false
   });
   
+  const [socialConfig, setSocialConfig] = useState({
+    facebook_email: '',
+    facebook_password: '',
+    facebook_connected: false,
+    instagram_username: '',
+    instagram_password: '',
+    instagram_connected: false,
+    linkedin_email: '',
+    linkedin_password: '',
+    linkedin_connected: false,
+    whatsapp_phone: '',
+    whatsapp_code: '',
+    whatsapp_connected: false,
+    auto_posting_enabled: false
+  });
+  
   const [automationStatus, setAutomationStatus] = useState(null);
   const [isConfiguring, setIsConfiguring] = useState(false);
   const [isRunningCampaign, setIsRunningCampaign] = useState(false);
