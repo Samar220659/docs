@@ -275,32 +275,32 @@ const AutonomousHub = () => {
   const runOptimization = async (optimizationType) => {
     try {
       setLoading(true);
-      let endpoint = '';
+      let endpoint;
       
       switch(optimizationType) {
         case 'full-cycle':
-          endpoint = '/optimization/run-full-cycle';
+          endpoint = optimizationApi.runFullCycle;
           break;
         case 'ab-tests':
-          endpoint = '/optimization/ab-tests';
+          endpoint = optimizationApi.runABTests;
           break;
         case 'budget-allocation':
-          endpoint = '/optimization/budget-allocation';
+          endpoint = optimizationApi.optimizeBudget;
           break;
         case 'viral-content':
-          endpoint = '/optimization/viral-content';
+          endpoint = optimizationApi.optimizeViralContent;
           break;
         case 'niche-expansion':
-          endpoint = '/optimization/niche-expansion';
+          endpoint = optimizationApi.expandNiches;
           break;
         case 'competitive-analysis':
-          endpoint = '/optimization/competitive-analysis';
+          endpoint = optimizationApi.analyzeCompetition;
           break;
         default:
-          endpoint = '/optimization/run-full-cycle';
+          endpoint = optimizationApi.runFullCycle;
       }
       
-      const response = await api.post(endpoint);
+      const response = await endpoint();
       
       toast({
         title: "🚀 Self-Optimization gestartet!",
