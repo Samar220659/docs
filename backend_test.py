@@ -343,6 +343,252 @@ class BackendTester:
             self.log_test("SaaS Status API", False, f"SaaS status test failed: {str(e)}")
             return False
     
+    def test_digital_manager_klaviyo_email(self):
+        """Test Klaviyo E-Mail Service"""
+        try:
+            email_data = {
+                "to_email": "test@zz-lobby-elite.de",
+                "subject": "Test Business E-Mail vom Digital Manager",
+                "content": "Dies ist eine Test-E-Mail vom ZZ-Lobby Elite Digital Manager System. Professionelle Kommunikation für Daniel Oettel."
+            }
+            
+            response = self.session.post(f"{self.api_url}/digital-manager/send-business-email", 
+                                       params=email_data)
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("status") == "success":
+                    self.log_test("Digital Manager - Klaviyo E-Mail", True, "E-Mail Service funktional",
+                                {"recipient": email_data["to_email"], "subject": email_data["subject"]})
+                    return True
+                else:
+                    self.log_test("Digital Manager - Klaviyo E-Mail", False, f"E-Mail Fehler: {data.get('message')}")
+                    return False
+            else:
+                self.log_test("Digital Manager - Klaviyo E-Mail", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Digital Manager - Klaviyo E-Mail", False, f"E-Mail Test Fehler: {str(e)}")
+            return False
+
+    def test_digital_manager_insurance_request(self):
+        """Test Versicherungsanfrage an Thomas Kaiser ERGO"""
+        try:
+            # Test Business Insurance Request
+            business_request = {
+                "request_type": "business",
+                "company_name": "ZZ-Lobby Elite",
+                "business_type": "Digital Business Automation",
+                "coverage_needed": ["Betriebshaftpflicht", "Cyber-Versicherung", "Rechtsschutz"],
+                "annual_revenue": 150000,
+                "employees": 2,
+                "priority": "high",
+                "notes": "Umfassende Geschäftsversicherung für digitales Unternehmen benötigt"
+            }
+            
+            response = self.session.post(f"{self.api_url}/digital-manager/insurance-request", 
+                                       json=business_request)
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("status") == "success" and "thomas_kaiser" in data:
+                    # Test Private Insurance Request
+                    private_request = {
+                        "request_type": "private",
+                        "coverage_needed": ["Haftpflicht", "Hausrat", "Berufsunfähigkeit"],
+                        "priority": "normal",
+                        "notes": "Private Versicherungsberatung für Daniel Oettel"
+                    }
+                    
+                    private_response = self.session.post(f"{self.api_url}/digital-manager/insurance-request", 
+                                                       json=private_request)
+                    private_success = private_response.status_code == 200
+                    
+                    self.log_test("Digital Manager - Versicherungsanfrage", True, "Versicherungsanfragen an Thomas Kaiser erfolgreich",
+                                {"business_request": True, "private_request": private_success, 
+                                 "thomas_kaiser_email": data["thomas_kaiser"]["email"]})
+                    return True
+                else:
+                    self.log_test("Digital Manager - Versicherungsanfrage", False, f"Anfrage Fehler: {data.get('message')}")
+                    return False
+            else:
+                self.log_test("Digital Manager - Versicherungsanfrage", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Digital Manager - Versicherungsanfrage", False, f"Versicherungstest Fehler: {str(e)}")
+            return False
+
+    def test_digital_manager_tax_calculation(self):
+        """Test KI-Steuerberechnung"""
+        try:
+            # Test documents for tax calculation
+            tax_documents = [
+                {
+                    "document_type": "income",
+                    "amount": 50000.0,
+                    "date": "2024-12-01T00:00:00",
+                    "description": "Umsatz ZZ-Lobby Elite Q4",
+                    "category": "Dienstleistung",
+                    "vat_rate": 0.19,
+                    "is_deductible": False
+                },
+                {
+                    "document_type": "expense",
+                    "amount": 15000.0,
+                    "date": "2024-11-15T00:00:00",
+                    "description": "Server und Software Kosten",
+                    "category": "Betriebsausgaben",
+                    "vat_rate": 0.19,
+                    "is_deductible": True
+                },
+                {
+                    "document_type": "expense",
+                    "amount": 8000.0,
+                    "date": "2024-10-20T00:00:00",
+                    "description": "Marketing und Werbung",
+                    "category": "Werbung",
+                    "vat_rate": 0.19,
+                    "is_deductible": True
+                }
+            ]
+            
+            response = self.session.post(f"{self.api_url}/digital-manager/tax-calculation", 
+                                       json=tax_documents)
+            if response.status_code == 200:
+                data = response.json()
+                if "summary" in data and "calculation_id" in data:
+                    summary = data["summary"]
+                    required_fields = ["total_income", "total_expenses", "profit_loss", "total_tax_burden"]
+                    
+                    missing_fields = [field for field in required_fields if field not in summary]
+                    if not missing_fields:
+                        self.log_test("Digital Manager - KI-Steuerberechnung", True, "Steuerberechnung erfolgreich",
+                                    {"documents_processed": data["documents_processed"],
+                                     "profit_loss": summary["profit_loss"],
+                                     "total_tax_burden": summary["total_tax_burden"],
+                                     "recommendations": len(data.get("recommendations", []))})
+                        return True
+                    else:
+                        self.log_test("Digital Manager - KI-Steuerberechnung", False, f"Fehlende Felder: {missing_fields}")
+                        return False
+                else:
+                    self.log_test("Digital Manager - KI-Steuerberechnung", False, "Unvollständige Steuerberechnung")
+                    return False
+            else:
+                self.log_test("Digital Manager - KI-Steuerberechnung", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Digital Manager - KI-Steuerberechnung", False, f"Steuerberechnungs-Fehler: {str(e)}")
+            return False
+
+    def test_digital_manager_legal_documents(self):
+        """Test Rechtsdokument-Generator"""
+        try:
+            # Test different legal document types
+            document_types = ["agb", "dsgvo", "impressum"]
+            successful_docs = 0
+            
+            for doc_type in document_types:
+                legal_request = {
+                    "document_type": doc_type,
+                    "company_name": "ZZ-Lobby Elite",
+                    "business_address": "06712 Zeitz, Deutschland",
+                    "contact_email": "daniel@zz-lobby-elite.de",
+                    "vat_id": "DE123456789",
+                    "business_type": "Digital Business Automation"
+                }
+                
+                response = self.session.post(f"{self.api_url}/digital-manager/legal-document", 
+                                           json=legal_request)
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("status") == "success" and "content" in data and "document_id" in data:
+                        successful_docs += 1
+            
+            if successful_docs == len(document_types):
+                self.log_test("Digital Manager - Rechtsdokumente", True, "Alle Rechtsdokumente erfolgreich generiert",
+                            {"agb": True, "dsgvo": True, "impressum": True, "total_generated": successful_docs})
+                return True
+            else:
+                self.log_test("Digital Manager - Rechtsdokumente", False, f"Nur {successful_docs}/{len(document_types)} Dokumente generiert")
+                return False
+        except Exception as e:
+            self.log_test("Digital Manager - Rechtsdokumente", False, f"Rechtsdokument-Fehler: {str(e)}")
+            return False
+
+    def test_digital_manager_dashboard(self):
+        """Test Digital Manager Dashboard"""
+        try:
+            response = self.session.get(f"{self.api_url}/digital-manager/dashboard")
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("status") == "success" and "dashboard" in data:
+                    dashboard = data["dashboard"]
+                    required_sections = ["daniel_info", "statistics", "available_services"]
+                    
+                    missing_sections = [section for section in required_sections if section not in dashboard]
+                    if not missing_sections:
+                        stats = dashboard["statistics"]
+                        services = dashboard["available_services"]
+                        
+                        self.log_test("Digital Manager - Dashboard", True, "Dashboard vollständig funktional",
+                                    {"daniel_name": dashboard["daniel_info"]["name"],
+                                     "total_automations": stats["total_automations"],
+                                     "available_services": len(services),
+                                     "thomas_kaiser_contact": "thomas_kaiser_contact" in dashboard})
+                        return True
+                    else:
+                        self.log_test("Digital Manager - Dashboard", False, f"Fehlende Dashboard-Bereiche: {missing_sections}")
+                        return False
+                else:
+                    self.log_test("Digital Manager - Dashboard", False, "Dashboard-Antwort unvollständig")
+                    return False
+            else:
+                self.log_test("Digital Manager - Dashboard", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Digital Manager - Dashboard", False, f"Dashboard-Fehler: {str(e)}")
+            return False
+
+    def test_digital_manager_daniel_info(self):
+        """Test Daniel's Info Endpoint"""
+        try:
+            response = self.session.get(f"{self.api_url}/digital-manager/daniel-info")
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("status") == "success" and "daniel_data" in data:
+                    daniel_data = data["daniel_data"]
+                    thomas_kaiser = data["thomas_kaiser"]
+                    services = data["services"]
+                    
+                    # Verify Daniel's data
+                    required_daniel_fields = ["name", "birth_date", "birth_place", "address", "email"]
+                    missing_daniel_fields = [field for field in required_daniel_fields if field not in daniel_data]
+                    
+                    # Verify Thomas Kaiser data
+                    required_thomas_fields = ["name", "email", "website", "company"]
+                    missing_thomas_fields = [field for field in required_thomas_fields if field not in thomas_kaiser]
+                    
+                    if not missing_daniel_fields and not missing_thomas_fields and len(services) >= 5:
+                        self.log_test("Digital Manager - Daniel Info", True, "Alle Informationen vollständig",
+                                    {"daniel_name": daniel_data["name"],
+                                     "daniel_birth": daniel_data["birth_date"],
+                                     "thomas_kaiser": thomas_kaiser["name"],
+                                     "thomas_website": thomas_kaiser["website"],
+                                     "services_count": len(services)})
+                        return True
+                    else:
+                        self.log_test("Digital Manager - Daniel Info", False, 
+                                    f"Fehlende Daten - Daniel: {missing_daniel_fields}, Thomas: {missing_thomas_fields}")
+                        return False
+                else:
+                    self.log_test("Digital Manager - Daniel Info", False, "Unvollständige Info-Antwort")
+                    return False
+            else:
+                self.log_test("Digital Manager - Daniel Info", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Digital Manager - Daniel Info", False, f"Info-Fehler: {str(e)}")
+            return False
+
     def run_all_tests(self):
         """Run all backend tests"""
         print("=" * 60)
@@ -363,6 +609,13 @@ class BackendTester:
             ("AI Marketing Engine", self.test_ai_marketing_engine),
             ("System Monitoring", self.test_system_monitoring),
             ("SaaS Status API", self.test_saas_status_api),
+            # Digital Manager System Tests
+            ("Digital Manager - Daniel Info", self.test_digital_manager_daniel_info),
+            ("Digital Manager - Dashboard", self.test_digital_manager_dashboard),
+            ("Digital Manager - Klaviyo E-Mail", self.test_digital_manager_klaviyo_email),
+            ("Digital Manager - Versicherungsanfrage", self.test_digital_manager_insurance_request),
+            ("Digital Manager - KI-Steuerberechnung", self.test_digital_manager_tax_calculation),
+            ("Digital Manager - Rechtsdokumente", self.test_digital_manager_legal_documents),
         ]
         
         passed = 0
