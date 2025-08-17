@@ -228,6 +228,10 @@ app.include_router(digital_manager_router)  # Digital Manager System
 from autonomous_business_engine import autonomous_router
 app.include_router(autonomous_router)  # Autonomous Business Engine
 
+# Self-Optimizing Engine Import
+from self_optimizing_engine import optimization_router
+app.include_router(optimization_router)  # Self-Optimizing Revenue Machine
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
