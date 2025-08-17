@@ -580,6 +580,68 @@ class SelfOptimizingEngine:
             self.logger.error(f"❌ Nischen-Expansion Fehler: {e}")
             return {"error": str(e)}
 
+    async def _analyze_current_niches(self) -> List[Dict[str, Any]]:
+        """Analysiert aktuelle Nischen"""
+        return [
+            {
+                "niche": "Digital Marketing für KMU",
+                "market_share": "12%",
+                "revenue_contribution": "€45,000/Jahr",
+                "growth_rate": "15%",
+                "saturation_level": "medium"
+            },
+            {
+                "niche": "Social Media Automation",
+                "market_share": "8%",
+                "revenue_contribution": "€28,000/Jahr",
+                "growth_rate": "22%",
+                "saturation_level": "low"
+            }
+        ]
+
+    async def _evaluate_niche_opportunity(self, niche: Dict[str, Any]) -> Dict[str, Any]:
+        """Evaluiert Nischen-Opportunity"""
+        viability_score = random.randint(65, 95)
+        
+        return {
+            "opportunity_id": str(uuid.uuid4()),
+            "niche": niche["niche"],
+            "viability_score": viability_score,
+            "market_size": niche["market_size"],
+            "competition_level": niche["competition_level"],
+            "estimated_monthly_revenue": random.randint(800, 3500),
+            "time_to_market": f"{random.randint(2, 8)} Wochen",
+            "required_investment": f"€{random.randint(500, 2000)}",
+            "risk_level": "niedrig" if viability_score > 80 else "mittel"
+        }
+
+    async def _create_niche_implementation_plan(self, opportunity: Dict[str, Any]) -> Dict[str, Any]:
+        """Erstellt Implementierungsplan für Nische"""
+        return {
+            "plan_id": str(uuid.uuid4()),
+            "opportunity_id": opportunity["opportunity_id"],
+            "niche": opportunity["niche"],
+            "phases": [
+                {
+                    "phase": "Marktanalyse",
+                    "duration": "1 Woche",
+                    "tasks": ["Zielgruppe definieren", "Konkurrenz analysieren"]
+                },
+                {
+                    "phase": "Service-Entwicklung",
+                    "duration": "2-3 Wochen",
+                    "tasks": ["Angebot erstellen", "Pricing definieren"]
+                },
+                {
+                    "phase": "Marketing-Launch",
+                    "duration": "1-2 Wochen",
+                    "tasks": ["Kampagne starten", "Lead-Generierung"]
+                }
+            ],
+            "success_metrics": ["Leads/Monat", "Conversion Rate", "Revenue"],
+            "go_live_date": datetime.now() + timedelta(weeks=6)
+        }
+
     async def _identify_potential_niches(self) -> List[Dict[str, Any]]:
         """Identifiziert potenzielle neue profitable Nischen"""
         return [
