@@ -811,6 +811,12 @@ class BackendTester:
             ("Digital Manager - Versicherungsanfrage", self.test_digital_manager_insurance_request),
             ("Digital Manager - KI-Steuerberechnung", self.test_digital_manager_tax_calculation),
             ("Digital Manager - Rechtsdokumente", self.test_digital_manager_legal_documents),
+            # Autonomous Business Engine Tests
+            ("Autonomous System Status", self.test_autonomous_system_status),
+            ("Autonomous Business Metrics", self.test_autonomous_business_metrics),
+            ("Autonomous Lead Processing", self.test_autonomous_lead_processing),
+            ("Autonomous AI Sales Chat", self.test_autonomous_sales_chat),
+            ("Autonomous Transaction Processing", self.test_autonomous_transaction_processing),
         ]
         
         passed = 0
