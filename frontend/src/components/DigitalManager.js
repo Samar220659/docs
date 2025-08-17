@@ -264,7 +264,7 @@ const DigitalManager = () => {
         {/* Header */}
         <div className="mb-8 text-center">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-300 bg-clip-text text-transparent mb-2">
-            🤖 ZZ-Lobby Elite Digital Manager
+            🤖 ZZ-Lobby Digital Manager
           </h1>
           <p className="text-slate-300 text-lg">
             Komplette Business-Automatisierung für Daniel Oettel
