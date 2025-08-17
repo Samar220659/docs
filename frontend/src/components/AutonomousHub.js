@@ -288,6 +288,44 @@ const AutonomousHub = () => {
     });
   };
 
+  const runOptimization = async (optimizationType) => {
+    try {
+      setLoading(true);
+      const response = await api.post('/optimization/run-optimization', {
+        optimization_type: optimizationType
+      });
+      
+      toast({
+        title: "🚀 Self-Optimization gestartet!",
+        description: `${optimizationType} wird ausgeführt - Ergebnisse in Kürze verfügbar`,
+        variant: "default"
+      });
+
+      // Real-time Update hinzufügen
+      addRealTimeUpdate({
+        type: 'optimization',
+        message: `🚀 Self-Optimization: ${optimizationType} gestartet`,
+        timestamp: new Date(),
+        optimization_type: optimizationType
+      });
+
+      // Metrics nach kurzer Verzögerung neu laden
+      setTimeout(() => {
+        loadOptimizationMetrics();
+        loadBusinessMetrics();
+      }, 2000);
+
+    } catch (error) {
+      toast({
+        title: "❌ Optimization Fehler",
+        description: error.response?.data?.detail || "Self-Optimization fehlgeschlagen",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading && !systemStatus) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
