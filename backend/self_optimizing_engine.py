@@ -1066,32 +1066,54 @@ class SelfOptimizingService:
         """Optimization Dashboard Daten"""
         try:
             # Neuester Optimierungszyklus
-            latest_cycle = await self.db.optimization_cycles.find().sort("started_date", -1).limit(1).to_list(1)
+            latest_cycle_cursor = await self.db.optimization_cycles.find().sort("started_date", -1).limit(1).to_list(1)
+            latest_cycle = None
+            if latest_cycle_cursor:
+                cycle = latest_cycle_cursor[0]
+                # Convert ObjectId to string and ensure JSON serializable
+                latest_cycle = {
+                    "cycle_id": cycle.get("cycle_id", str(cycle.get("_id", ""))),
+                    "started_date": cycle.get("started_date"),
+                    "optimizations_completed": len(cycle.get("optimizations_run", [])),
+                    "overall_performance": cycle.get("overall_performance", {})
+                }
             
             # Performance-Metriken
             performance_metrics = await self._get_performance_metrics()
             
-            # Aktive A/B-Tests
-            active_tests = await self.db.ab_tests.find({"status": "running"}).to_list(10)
+            # Aktive A/B-Tests (count only to avoid ObjectId issues)
+            active_tests_count = await self.db.ab_tests.count_documents({"status": "running"})
             
             # Budget-Allocation
-            latest_allocation = await self.db.budget_allocations.find().sort("date", -1).limit(1).to_list(1)
+            latest_allocation_cursor = await self.db.budget_allocations.find().sort("date", -1).limit(1).to_list(1)
+            latest_allocation = None
+            if latest_allocation_cursor:
+                allocation = latest_allocation_cursor[0]
+                latest_allocation = {
+                    "allocation_id": allocation.get("allocation_id", str(allocation.get("_id", ""))),
+                    "date": allocation.get("date"),
+                    "total_budget": allocation.get("total_budget", 0),
+                    "campaigns_optimized": len(allocation.get("allocations", []))
+                }
+            
+            # Count optimizations this month
+            optimizations_this_month = await self.db.optimization_cycles.count_documents({
+                "started_date": {"$gte": datetime.now().replace(day=1)}
+            })
             
             dashboard = {
                 "dashboard_id": str(uuid.uuid4()),
                 "generated_date": datetime.now(),
-                "latest_optimization_cycle": latest_cycle[0] if latest_cycle else None,
+                "latest_optimization_cycle": latest_cycle,
                 "performance_metrics": performance_metrics,
-                "active_ab_tests": len(active_tests),
-                "current_budget_allocation": latest_allocation[0] if latest_allocation else None,
+                "active_ab_tests": active_tests_count,
+                "current_budget_allocation": latest_allocation,
                 "optimization_status": {
                     "overall_health": "excellent",
                     "autonomy_level": "95%",
-                    "last_optimization": latest_cycle[0]["started_date"] if latest_cycle else None,
+                    "last_optimization": latest_cycle["started_date"] if latest_cycle else None,
                     "next_optimization": datetime.now() + timedelta(hours=24),
-                    "optimizations_this_month": await self.db.optimization_cycles.count_documents({
-                        "started_date": {"$gte": datetime.now().replace(day=1)}
-                    })
+                    "optimizations_this_month": optimizations_this_month
                 }
             }
             
