@@ -1148,6 +1148,17 @@ class BackendTester:
             ("Autonomous Lead Processing", self.test_autonomous_lead_processing),
             ("Autonomous AI Sales Chat", self.test_autonomous_sales_chat),
             ("Autonomous Transaction Processing", self.test_autonomous_transaction_processing),
+            # Self-Optimizing Revenue Machine Tests
+            ("Self-Optimizing System Health", self.test_self_optimizing_system_health),
+            ("Self-Optimizing Performance Metrics", self.test_self_optimizing_performance_metrics),
+            ("Self-Optimizing Full Cycle", self.test_self_optimizing_full_cycle),
+            ("Self-Optimizing A/B-Tests", self.test_self_optimizing_ab_tests),
+            ("Self-Optimizing Budget Allocation", self.test_self_optimizing_budget_allocation),
+            ("Self-Optimizing Viral Content", self.test_self_optimizing_viral_content),
+            ("Self-Optimizing Niche Expansion", self.test_self_optimizing_niche_expansion),
+            ("Self-Optimizing Competitive Analysis", self.test_self_optimizing_competitive_analysis),
+            ("Self-Optimizing Market Opportunities", self.test_self_optimizing_market_opportunities),
+            ("Self-Optimizing Dashboard", self.test_self_optimizing_dashboard),
         ]
         
         passed = 0
