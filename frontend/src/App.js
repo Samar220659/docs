@@ -10,6 +10,7 @@ import ControlCenter from "./components/ControlCenter";
 import AutomationControl from "./components/AutomationControl";
 import EasyAutomation from "./components/EasyAutomation";
 import AIMarketingHub from "./components/AIMarketingHub";
+import DigitalManager from "./components/DigitalManager";
 import "./App.css";
 
 function App() {
