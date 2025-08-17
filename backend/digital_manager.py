@@ -181,16 +181,18 @@ class DigitalManagerService:
         try:
             # Persönliche vs. Geschäftliche Anfrage
             if request.request_type == "business":
-                subject = f"🏢 Geschäftsversicherung Anfrage - ZZ-Lobby Elite"
+                subject = f"🏢 Geschäftsversicherung Anfrage - ZZ-Lobby"
                 content = f"""
                 <h2>Geschäftsversicherung Beratungsanfrage</h2>
                 
                 <div style="background: #f0f8ff; padding: 15px; border-radius: 5px; margin: 15px 0;">
                     <h3>Unternehmensdaten:</h3>
-                    <p><strong>Firmenname:</strong> {request.company_name or 'ZZ-Lobby Elite'}</p>
-                    <p><strong>Geschäftstätigkeit:</strong> {request.business_type or 'Digital Business Automation'}</p>
+                    <p><strong>Firmenname:</strong> {request.company_name or 'ZZ-Lobby'}</p>
+                    <p><strong>Geschäftstätigkeit:</strong> {request.business_type or 'Digitale Business-Automatisierung und Online-Marketing'}</p>
                     <p><strong>Jahresumsatz:</strong> {request.annual_revenue or 'Zu besprechen'} €</p>
                     <p><strong>Mitarbeiter:</strong> {request.employees or 1}</p>
+                    <p><strong>Umsatzsteuer-Nummer:</strong> {self.daniel_data['umsatzsteuer_nummer']}</p>
+                    <p><strong>Umsatzsteuer-ID:</strong> {self.daniel_data['umsatzsteuer_id']}</p>
                 </div>
                 
                 <div style="background: #fff3cd; padding: 15px; border-radius: 5px; margin: 15px 0;">
