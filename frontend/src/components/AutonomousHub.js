@@ -53,11 +53,13 @@ const AutonomousHub = () => {
   useEffect(() => {
     loadSystemStatus();
     loadBusinessMetrics();
+    loadOptimizationMetrics();
     
     // Real-time Updates alle 30 Sekunden
     const interval = setInterval(() => {
       loadSystemStatus();
       loadBusinessMetrics();
+      loadOptimizationMetrics();
     }, 30000);
 
     return () => clearInterval(interval);
