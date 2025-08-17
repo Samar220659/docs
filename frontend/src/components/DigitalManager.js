@@ -80,7 +80,7 @@ const DigitalManager = () => {
   const handleInsuranceRequest = async () => {
     try {
       setLoading(true);
-      const response = await api.post('/digital-manager/insurance-request', insuranceForm);
+      const response = await digitalManagerApi.requestInsurance(insuranceForm);
       
       toast({
         title: "🛡️ Versicherungsanfrage gesendet!",
