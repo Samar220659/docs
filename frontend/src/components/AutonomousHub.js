@@ -215,7 +215,7 @@ const AutonomousHub = () => {
 
     try {
       setLoading(true);
-      const response = await api.post('/autonomous/complete-transaction', {
+      const response = await autonomousApi.completeTransaction({
         ...transactionForm,
         amount: parseFloat(transactionForm.amount)
       });
