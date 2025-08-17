@@ -16,8 +16,8 @@ const DigitalManager = () => {
   // Insurance Request State
   const [insuranceForm, setInsuranceForm] = useState({
     request_type: 'business',
-    company_name: 'ZZ-Lobby Elite',
-    business_type: 'Digital Business Automation',
+    company_name: 'ZZ-Lobby',
+    business_type: 'Digitale Business-Automatisierung und Online-Marketing',
     coverage_needed: [],
     annual_revenue: '',
     employees: 1,
