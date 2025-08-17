@@ -413,7 +413,8 @@ class DigitalManagerService:
                 "daniel_data": self.daniel_data
             }
             
-            await self.db.legal_documents.insert_one(legal_doc)
+            legal_doc_copy = legal_doc.copy()
+            await self.db.legal_documents.insert_one(legal_doc_copy)
             
             self.logger.info(f"⚖️ Rechtsdokument ({doc_request.document_type}) generiert")
             
