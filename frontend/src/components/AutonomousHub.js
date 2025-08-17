@@ -272,6 +272,67 @@ const AutonomousHub = () => {
     setRealTimeUpdates(prev => [update, ...prev.slice(0, 9)]);
   };
 
+  const runOptimization = async (optimizationType) => {
+    try {
+      setLoading(true);
+      let endpoint = '';
+      
+      switch(optimizationType) {
+        case 'full-cycle':
+          endpoint = '/optimization/run-full-cycle';
+          break;
+        case 'ab-tests':
+          endpoint = '/optimization/ab-tests';
+          break;
+        case 'budget-allocation':
+          endpoint = '/optimization/budget-allocation';
+          break;
+        case 'viral-content':
+          endpoint = '/optimization/viral-content';
+          break;
+        case 'niche-expansion':
+          endpoint = '/optimization/niche-expansion';
+          break;
+        case 'competitive-analysis':
+          endpoint = '/optimization/competitive-analysis';
+          break;
+        default:
+          endpoint = '/optimization/run-full-cycle';
+      }
+      
+      const response = await api.post(endpoint);
+      
+      toast({
+        title: "🚀 Self-Optimization gestartet!",
+        description: `${optimizationType} wird ausgeführt - System optimiert sich selbst`,
+        variant: "default"
+      });
+
+      // Real-time Update hinzufügen
+      addRealTimeUpdate({
+        type: 'optimization',
+        message: `🚀 Self-Optimization: ${optimizationType.replace('-', ' ')} gestartet`,
+        timestamp: new Date(),
+        optimization_type: optimizationType
+      });
+
+      // Metrics nach kurzer Verzögerung neu laden
+      setTimeout(() => {
+        loadOptimizationMetrics();
+        loadBusinessMetrics();
+      }, 2000);
+
+    } catch (error) {
+      toast({
+        title: "❌ Optimization Fehler",
+        description: error.response?.data?.detail || "Self-Optimization fehlgeschlagen",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const addInterest = (interest) => {
     if (!leadForm.interests.includes(interest)) {
       setLeadForm({
