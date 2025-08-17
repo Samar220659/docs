@@ -224,6 +224,10 @@ app.include_router(monitoring_router)  # System Monitoring
 from digital_manager import digital_manager_router
 app.include_router(digital_manager_router)  # Digital Manager System
 
+# Autonomous Business Engine Import
+from autonomous_business_engine import autonomous_router
+app.include_router(autonomous_router)  # Autonomous Business Engine
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
