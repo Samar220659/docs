@@ -206,7 +206,7 @@ const DigitalManager = () => {
 
     try {
       setLoading(true);
-      const response = await api.post('/digital-manager/send-business-email', emailForm);
+      const response = await digitalManagerApi.sendEmail(emailForm);
       
       toast({
         title: "📧 E-Mail versendet!",
