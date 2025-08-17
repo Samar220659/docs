@@ -890,6 +890,156 @@ const AutonomousHub = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* Self-Optimization Tab */}
+          <TabsContent value="optimization" className="space-y-6">
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-emerald-300 flex items-center gap-2">
+                  🚀 Self-Optimizing Revenue Machine - 95% Autonomie
+                </CardTitle>
+                <p className="text-slate-400 text-sm">
+                  System optimiert sich selbst - A/B-Tests, Budget-Allocation, Viral Content, Nischen-Expansion
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                
+                {/* Quick Actions */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Button 
+                    onClick={() => runOptimization('full-cycle')}
+                    disabled={loading}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white p-6 h-auto flex flex-col"
+                  >
+                    <div className="text-2xl mb-2">🔄</div>
+                    <div className="font-semibold">Full Optimization Cycle</div>
+                    <div className="text-xs opacity-80">Komplette Selbstoptimierung</div>
+                  </Button>
+                  
+                  <Button 
+                    onClick={() => runOptimization('ab-tests')}
+                    disabled={loading}
+                    className="bg-blue-600 hover:bg-blue-700 text-white p-6 h-auto flex flex-col"
+                  >
+                    <div className="text-2xl mb-2">🧪</div>
+                    <div className="font-semibold">A/B-Tests starten</div>
+                    <div className="text-xs opacity-80">Automatische Kampagnen-Tests</div>
+                  </Button>
+                  
+                  <Button 
+                    onClick={() => runOptimization('budget-allocation')}
+                    disabled={loading}
+                    className="bg-purple-600 hover:bg-purple-700 text-white p-6 h-auto flex flex-col"
+                  >
+                    <div className="text-2xl mb-2">💰</div>
+                    <div className="font-semibold">Budget optimieren</div>
+                    <div className="text-xs opacity-80">Performance-basierte Verteilung</div>
+                  </Button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Button 
+                    onClick={() => runOptimization('viral-content')}
+                    disabled={loading}
+                    className="bg-pink-600 hover:bg-pink-700 text-white p-6 h-auto flex flex-col"
+                  >
+                    <div className="text-2xl mb-2">🚀</div>
+                    <div className="font-semibold">Viral Content</div>
+                    <div className="text-xs opacity-80">Content für maximale Reichweite</div>
+                  </Button>
+                  
+                  <Button 
+                    onClick={() => runOptimization('niche-expansion')}
+                    disabled={loading}
+                    className="bg-orange-600 hover:bg-orange-700 text-white p-6 h-auto flex flex-col"
+                  >
+                    <div className="text-2xl mb-2">🎯</div>
+                    <div className="font-semibold">Nischen-Expansion</div>
+                    <div className="text-xs opacity-80">Neue profitable Märkte finden</div>
+                  </Button>
+                  
+                  <Button 
+                    onClick={() => runOptimization('competitive-analysis')}
+                    disabled={loading}
+                    className="bg-red-600 hover:bg-red-700 text-white p-6 h-auto flex flex-col"
+                  >
+                    <div className="text-2xl mb-2">🔍</div>
+                    <div className="font-semibold">Konkurrenz-Analyse</div>
+                    <div className="text-xs opacity-80">Marktlücken automatisch finden</div>
+                  </Button>
+                </div>
+
+                {/* Optimization Metrics */}
+                {optimizationMetrics && (
+                  <Card className="bg-emerald-900/20 border-emerald-800">
+                    <CardHeader>
+                      <CardTitle className="text-emerald-300">📈 Self-Optimization Performance</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-emerald-400">
+                            +{optimizationMetrics.revenue_growth?.toFixed(1)}%
+                          </div>
+                          <div className="text-sm text-slate-400">Revenue Growth</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-blue-400">
+                            +{optimizationMetrics.conversion_rate_improvement?.toFixed(1)}%
+                          </div>
+                          <div className="text-sm text-slate-400">Conversion Improvement</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-purple-400">
+                            -{optimizationMetrics.cost_per_acquisition_reduction?.toFixed(1)}%
+                          </div>
+                          <div className="text-sm text-slate-400">Cost Reduction</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-yellow-400">
+                            +{optimizationMetrics.customer_lifetime_value_increase?.toFixed(1)}%
+                          </div>
+                          <div className="text-sm text-slate-400">LTV Increase</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-pink-400">
+                            +{optimizationMetrics.market_share_growth?.toFixed(1)}%
+                          </div>
+                          <div className="text-sm text-slate-400">Market Share</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-emerald-400">
+                            {optimizationMetrics.efficiency_score?.toFixed(1)}/100
+                          </div>
+                          <div className="text-sm text-slate-400">Efficiency Score</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                <Card className="bg-emerald-900/20 border-emerald-800">
+                  <CardContent className="p-4">
+                    <h4 className="text-emerald-300 font-semibold mb-2">🤖 Was läuft vollautomatisch:</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <ul className="text-sm text-slate-300 space-y-1">
+                        <li>• 🧪 A/B-Tests aller E-Mail-Subjects</li>
+                        <li>• 💰 Performance-basierte Budget-Verteilung</li>
+                        <li>• 🚀 Viral-Content-Optimierung</li>
+                        <li>• 🎯 Multi-Nischen-Expansion</li>
+                      </ul>
+                      <ul className="text-sm text-slate-300 space-y-1">
+                        <li>• 🔍 Automatische Konkurrenz-Analyse</li>
+                        <li>• 💡 Marktchancen-Erkennung</li>
+                        <li>• 📊 Real-time Performance-Tracking</li>
+                        <li>• 🔄 24/7 Selbstoptimierung</li>
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
