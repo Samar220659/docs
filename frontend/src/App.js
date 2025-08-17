@@ -12,6 +12,7 @@ import EasyAutomation from "./components/EasyAutomation";
 import AIMarketingHub from "./components/AIMarketingHub";
 import DigitalManager from "./components/DigitalManager";
 import AutonomousHub from "./components/AutonomousHub";
+import ProductionLaunch from "./components/ProductionLaunch";
 import "./App.css";
 
 function App() {
