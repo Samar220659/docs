@@ -232,6 +232,10 @@ app.include_router(autonomous_router)  # Autonomous Business Engine
 from self_optimizing_engine import optimization_router
 app.include_router(optimization_router)  # Self-Optimizing Revenue Machine
 
+# Production Launch Engine Import
+from production_launcher import production_router
+app.include_router(production_router)  # Production Launch System
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
