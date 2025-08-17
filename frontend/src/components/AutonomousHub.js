@@ -158,7 +158,7 @@ const AutonomousHub = () => {
 
     try {
       setLoading(true);
-      const response = await api.post('/autonomous/sales-chat', chatForm);
+      const response = await autonomousApi.salesChat(chatForm);
       
       // Chat zur aktiven Liste hinzufügen
       const newChat = {
