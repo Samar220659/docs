@@ -8,7 +8,7 @@ import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Progress } from './ui/progress';
 import { toast } from '../hooks/use-toast';
-import api from '../services/api';
+import { autonomousApi, optimizationApi } from '../services/api';
 
 const AutonomousHub = () => {
   const [systemStatus, setSystemStatus] = useState(null);
