@@ -83,4 +83,37 @@ api.interceptors.response.use(
   }
 );
 
+// Digital Manager API
+export const digitalManagerApi = {
+  getDashboard: () => api.get('/digital-manager/dashboard'),
+  getDanielInfo: () => api.get('/digital-manager/daniel-info'),
+  requestInsurance: (data) => api.post('/digital-manager/insurance-request', data),
+  calculateTax: (data) => api.post('/digital-manager/tax-calculation', data),
+  generateLegalDoc: (data) => api.post('/digital-manager/legal-document', data),
+  sendEmail: (data) => api.post('/digital-manager/send-business-email', data)
+};
+
+// Autonomous Business API
+export const autonomousApi = {
+  getSystemStatus: () => api.get('/autonomous/system-status'),
+  getBusinessMetrics: () => api.get('/autonomous/business-metrics'),
+  processLead: (data) => api.post('/autonomous/process-lead', data),
+  salesChat: (data) => api.post('/autonomous/sales-chat', data),
+  completeTransaction: (data) => api.post('/autonomous/complete-transaction', data)
+};
+
+// Optimization API
+export const optimizationApi = {
+  getSystemHealth: () => api.get('/optimization/system-health'),
+  getPerformanceMetrics: () => api.get('/optimization/performance-metrics'),
+  runFullCycle: () => api.post('/optimization/run-full-cycle'),
+  runABTests: () => api.post('/optimization/ab-tests'),
+  optimizeBudget: () => api.post('/optimization/budget-allocation'),
+  optimizeViralContent: () => api.post('/optimization/viral-content'),
+  expandNiches: () => api.post('/optimization/niche-expansion'),
+  analyzeCompetition: () => api.post('/optimization/competitive-analysis'),
+  detectOpportunities: () => api.post('/optimization/market-opportunities'),
+  getDashboard: () => api.get('/optimization/dashboard')
+};
+
 export default api;
