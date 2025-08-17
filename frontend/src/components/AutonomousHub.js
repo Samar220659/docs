@@ -67,7 +67,7 @@ const AutonomousHub = () => {
 
   const loadOptimizationMetrics = async () => {
     try {
-      const response = await api.get('/optimization/performance-metrics');
+      const response = await optimizationApi.getPerformanceMetrics();
       setOptimizationMetrics(response.data.performance_metrics);
     } catch (error) {
       console.error('Optimization Metrics Fehler:', error);
@@ -76,7 +76,7 @@ const AutonomousHub = () => {
 
   const loadSystemStatus = async () => {
     try {
-      const response = await api.get('/autonomous/system-status');
+      const response = await autonomousApi.getSystemStatus();
       setSystemStatus(response.data.autonomous_system);
     } catch (error) {
       console.error('System Status Fehler:', error);
@@ -85,7 +85,7 @@ const AutonomousHub = () => {
 
   const loadBusinessMetrics = async () => {
     try {
-      const response = await api.get('/autonomous/business-metrics');
+      const response = await autonomousApi.getBusinessMetrics();
       setBusinessMetrics(response.data.autonomous_metrics);
     } catch (error) {
       console.error('Business Metrics Fehler:', error);
