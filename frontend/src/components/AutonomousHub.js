@@ -65,6 +65,15 @@ const AutonomousHub = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const loadOptimizationMetrics = async () => {
+    try {
+      const response = await api.get('/optimization/performance-metrics');
+      setOptimizationMetrics(response.data.performance_metrics);
+    } catch (error) {
+      console.error('Optimization Metrics Fehler:', error);
+    }
+  };
+
   const loadSystemStatus = async () => {
     try {
       const response = await api.get('/autonomous/system-status');
