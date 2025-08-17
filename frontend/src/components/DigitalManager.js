@@ -64,7 +64,7 @@ const DigitalManager = () => {
   const loadDashboard = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/digital-manager/dashboard');
+      const response = await digitalManagerApi.getDashboard();
       setDashboardData(response.data.dashboard);
     } catch (error) {
       toast({
