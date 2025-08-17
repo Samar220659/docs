@@ -344,7 +344,8 @@ class DigitalManagerService:
             }
             
             # In Datenbank speichern
-            await self.db.tax_calculations.insert_one(tax_report)
+            tax_report_copy = tax_report.copy()
+            await self.db.tax_calculations.insert_one(tax_report_copy)
             
             # Steuerberater-E-Mail senden (optional)
             steuer_email_content = f"""
