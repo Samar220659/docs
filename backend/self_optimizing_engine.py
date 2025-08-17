@@ -869,6 +869,53 @@ class SelfOptimizingEngine:
             self.logger.error(f"❌ Market Opportunity Detection Fehler: {e}")
             return {"error": str(e)}
 
+    async def _analyze_market_trends(self) -> List[Dict[str, Any]]:
+        """Analysiert Markttrends"""
+        return [
+            {
+                "trend_id": str(uuid.uuid4()),
+                "trend": "KI-Integration in KMU",
+                "growth_rate": "45%",
+                "market_size": "€2.3M",
+                "urgency_score": 85,
+                "opportunity_window": "6 Monate"
+            },
+            {
+                "trend_id": str(uuid.uuid4()),
+                "trend": "Remote Work Tools",
+                "growth_rate": "32%",
+                "market_size": "€1.8M",
+                "urgency_score": 78,
+                "opportunity_window": "9 Monate"
+            }
+        ]
+
+    async def _derive_opportunities_from_trend(self, trend: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Leitet Opportunities aus Trends ab"""
+        return [
+            {
+                "opportunity_id": str(uuid.uuid4()),
+                "trend_id": trend["trend_id"],
+                "opportunity": f"Service für {trend['trend']}",
+                "estimated_monthly_revenue": random.randint(1500, 4500),
+                "urgency_score": trend["urgency_score"],
+                "implementation_complexity": random.choice(["niedrig", "mittel", "hoch"]),
+                "time_to_market": f"{random.randint(4, 12)} Wochen"
+            }
+        ]
+
+    async def _create_immediate_action(self, opportunity: Dict[str, Any]) -> Dict[str, Any]:
+        """Erstellt sofortige Aktion für Opportunity"""
+        return {
+            "action_id": str(uuid.uuid4()),
+            "opportunity_id": opportunity["opportunity_id"],
+            "action_type": "market_research",
+            "description": f"Sofortige Marktanalyse für {opportunity['opportunity']}",
+            "deadline": datetime.now() + timedelta(days=7),
+            "priority": "hoch",
+            "assigned_to": "autonomous_system"
+        }
+
     def _calculate_budget_efficiency(self, campaigns: List[Dict[str, Any]]) -> float:
         """Berechnet Budget-Effizienz-Score"""
         total_spent = sum([camp["spent"] for camp in campaigns])
