@@ -28,7 +28,7 @@ class KlaviyoService:
         }
         self.logger = logging.getLogger(__name__)
 
-    async def send_email(self, to_email: str, subject: str, content: str, sender_name: str = "Daniel Oettel - ZZ-Lobby Elite"):
+    async def send_email(self, to_email: str, subject: str, content: str, sender_name: str = "Daniel Oettel - ZZ-Lobby"):
         """Professional E-Mail via Klaviyo"""
         try:
             # Create profile if not exists
@@ -55,14 +55,14 @@ class KlaviyoService:
                         "content": {
                             "subject": subject,
                             "preview_text": subject[:100],
-                            "from_email": "daniel@zz-lobby-elite.de",
+                            "from_email": "daniel@zz-lobby.de",
                             "from_label": sender_name,
-                            "reply_to_email": "daniel@zz-lobby-elite.de",
+                            "reply_to_email": "daniel@zz-lobby.de",
                             "html": f"""
                             <html>
                                 <body style="font-family: Arial, sans-serif; color: #333;">
                                     <div style="background: linear-gradient(135deg, #1a1a1a 0%, #2d1810 100%); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-                                        <h1 style="color: #f4c430; text-align: center; margin: 0;">ZZ-Lobby Elite</h1>
+                                        <h1 style="color: #f4c430; text-align: center; margin: 0;">ZZ-Lobby</h1>
                                         <p style="color: #ccc; text-align: center; margin: 5px 0;">Digital Business Manager</p>
                                     </div>
                                     
@@ -77,15 +77,16 @@ class KlaviyoService:
                                         <div style="background: #fff; padding: 15px; border-radius: 5px; border-left: 4px solid #f4c430;">
                                             <h3 style="margin: 0 0 10px 0; color: #2c3e50;">Kontaktdaten</h3>
                                             <p style="margin: 5px 0;"><strong>Daniel Oettel</strong></p>
-                                            <p style="margin: 5px 0;">ZZ-Lobby Elite Digital Manager</p>
-                                            <p style="margin: 5px 0;">📧 daniel@zz-lobby-elite.de</p>
+                                            <p style="margin: 5px 0;">ZZ-Lobby Digital Manager</p>
+                                            <p style="margin: 5px 0;">📧 daniel@zz-lobby.de</p>
                                             <p style="margin: 5px 0;">📍 06712 Zeitz, Deutschland</p>
+                                            <p style="margin: 5px 0;">🏢 USt-ID: DE4535548228</p>
                                         </div>
                                     </div>
                                     
                                     <div style="text-align: center; margin-top: 20px; color: #888; font-size: 12px;">
-                                        <p>Diese E-Mail wurde automatisch vom ZZ-Lobby Elite Digital Manager System generiert.</p>
-                                        <p>© 2025 ZZ-Lobby Elite - Professionelle Business-Automatisierung</p>
+                                        <p>Diese E-Mail wurde automatisch vom ZZ-Lobby Digital Manager System generiert.</p>
+                                        <p>© 2025 ZZ-Lobby - Professionelle Business-Automatisierung</p>
                                     </div>
                                 </body>
                             </html>
