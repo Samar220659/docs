@@ -405,7 +405,7 @@ const AutonomousHub = () => {
 
         {/* Main Tabs */}
         <Tabs defaultValue="lead-processing" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 bg-slate-800 border-slate-700">
+          <TabsList className="grid w-full grid-cols-5 bg-slate-800 border-slate-700">
             <TabsTrigger value="lead-processing" className="text-green-300 data-[state=active]:bg-green-900">
               🎯 AI-Lead-Processing
             </TabsTrigger>
@@ -414,6 +414,9 @@ const AutonomousHub = () => {
             </TabsTrigger>
             <TabsTrigger value="transaction-engine" className="text-purple-300 data-[state=active]:bg-purple-900">
               💰 Transaction-Engine  
+            </TabsTrigger>
+            <TabsTrigger value="optimization" className="text-emerald-300 data-[state=active]:bg-emerald-900">
+              🚀 Self-Optimization
             </TabsTrigger>
             <TabsTrigger value="monitoring" className="text-yellow-300 data-[state=active]:bg-yellow-900">
               📊 Monitoring
