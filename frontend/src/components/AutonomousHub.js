@@ -104,7 +104,7 @@ const AutonomousHub = () => {
 
     try {
       setLoading(true);
-      const response = await api.post('/autonomous/process-lead', leadForm);
+      const response = await autonomousApi.processLead(leadForm);
       
       toast({
         title: "🤖 Lead vollautomatisch verarbeitet!",
