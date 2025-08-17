@@ -13,6 +13,7 @@ import { api } from '../services/api';
 const AutonomousHub = () => {
   const [systemStatus, setSystemStatus] = useState(null);
   const [businessMetrics, setBusinessMetrics] = useState(null);
+  const [optimizationMetrics, setOptimizationMetrics] = useState(null);
   const [loading, setLoading] = useState(false);
   const [realTimeUpdates, setRealTimeUpdates] = useState([]);
 
