@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { toast } from '../hooks/use-toast';
-import { api } from '../services/api';
+import api from '../services/api';
 
 const DigitalManager = () => {
   const [dashboardData, setDashboardData] = useState(null);
