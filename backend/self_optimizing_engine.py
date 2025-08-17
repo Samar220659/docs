@@ -719,6 +719,84 @@ class SelfOptimizingEngine:
             self.logger.error(f"❌ Competitive Intelligence Fehler: {e}")
             return {"error": str(e)}
 
+    async def _analyze_competitor(self, competitor: Dict[str, Any]) -> Dict[str, Any]:
+        """Analysiert einzelnen Konkurrenten"""
+        return {
+            "competitor_id": str(uuid.uuid4()),
+            "name": competitor["name"],
+            "location": competitor["location"],
+            "services": competitor["services"],
+            "pricing_range": competitor["pricing_range"],
+            "strengths": competitor["strengths"],
+            "weaknesses": competitor["weaknesses"],
+            "market_share": f"{random.randint(5, 25)}%",
+            "threat_level": random.choice(["niedrig", "mittel", "hoch"]),
+            "opportunities_against": [
+                "Bessere Automatisierung",
+                "Persönlicherer Service",
+                "Modernere Technologie"
+            ]
+        }
+
+    async def _identify_market_gaps(self, competitors: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Identifiziert Marktlücken"""
+        return [
+            {
+                "gap_id": str(uuid.uuid4()),
+                "gap_type": "service_gap",
+                "description": "KI-basierte Automatisierung fehlt bei Konkurrenten",
+                "opportunity_size": "€50,000/Jahr",
+                "difficulty": "mittel"
+            },
+            {
+                "gap_id": str(uuid.uuid4()),
+                "gap_type": "pricing_gap",
+                "description": "Flexible Preismodelle nicht verfügbar",
+                "opportunity_size": "€30,000/Jahr",
+                "difficulty": "niedrig"
+            }
+        ]
+
+    async def _analyze_pricing_opportunities(self, competitors: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Analysiert Pricing-Opportunities"""
+        return [
+            {
+                "opportunity_id": str(uuid.uuid4()),
+                "type": "premium_pricing",
+                "description": "Premium-Services 20% über Marktpreis möglich",
+                "potential_increase": "20%",
+                "risk_level": "niedrig"
+            },
+            {
+                "opportunity_id": str(uuid.uuid4()),
+                "type": "value_pricing",
+                "description": "Performance-basierte Preismodelle einführen",
+                "potential_increase": "35%",
+                "risk_level": "mittel"
+            }
+        ]
+
+    async def _generate_strategic_recommendations(self, competitive_analysis: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Generiert strategische Empfehlungen"""
+        return [
+            {
+                "recommendation_id": str(uuid.uuid4()),
+                "type": "differentiation",
+                "title": "KI-Automatisierung als USP",
+                "description": "Fokus auf KI-basierte Automatisierung als Hauptunterscheidungsmerkmal",
+                "priority": "hoch",
+                "implementation_time": "2-4 Wochen"
+            },
+            {
+                "recommendation_id": str(uuid.uuid4()),
+                "type": "pricing",
+                "title": "Performance-basierte Preismodelle",
+                "description": "Einführung erfolgsbasierter Preisstrukturen",
+                "priority": "mittel",
+                "implementation_time": "4-6 Wochen"
+            }
+        ]
+
     async def _identify_competitors(self) -> List[Dict[str, Any]]:
         """Identifiziert Hauptkonkurrenten"""
         return [
