@@ -209,6 +209,8 @@ class DigitalManagerService:
                     <p><strong>Geburtsort:</strong> {self.daniel_data['birth_place']}</p>
                     <p><strong>Wohnort:</strong> {self.daniel_data['address']}</p>
                     <p><strong>E-Mail:</strong> {self.daniel_data['email']}</p>
+                    <p><strong>Steuer-ID:</strong> {self.daniel_data['steuer_id']}</p>
+                    <p><strong>Elster-Benutzer-ID:</strong> {self.daniel_data['elster_benutzer_id']}</p>
                 </div>
                 
                 <p><strong>Priorität:</strong> <span style="color: {'red' if request.priority == 'urgent' else 'orange' if request.priority == 'high' else 'green'};">{request.priority.upper()}</span></p>
