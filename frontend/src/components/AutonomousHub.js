@@ -327,7 +327,7 @@ const AutonomousHub = () => {
 
         {/* Real-time Performance Dashboard */}
         {businessMetrics && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
             <Card className="bg-slate-800 border-slate-700">
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-green-400">
@@ -360,6 +360,16 @@ const AutonomousHub = () => {
                 <div className="text-sm text-slate-400">📈 Ø Deal-Size</div>
               </CardContent>
             </Card>
+            {optimizationMetrics && (
+              <Card className="bg-slate-800 border-slate-700">
+                <CardContent className="p-4 text-center">
+                  <div className="text-2xl font-bold text-emerald-400">
+                    +{optimizationMetrics.revenue_growth?.toFixed(1) || '0.0'}%
+                  </div>
+                  <div className="text-sm text-slate-400">🚀 Revenue Growth</div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         )}
 
