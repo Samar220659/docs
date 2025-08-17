@@ -589,6 +589,201 @@ class BackendTester:
             self.log_test("Digital Manager - Daniel Info", False, f"Info-Fehler: {str(e)}")
             return False
 
+    def test_autonomous_system_status(self):
+        """Test Autonomous Business Engine System Status"""
+        try:
+            response = self.session.get(f"{self.api_url}/autonomous/system-status")
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("status") == "success" and "autonomous_system" in data:
+                    system = data["autonomous_system"]
+                    required_components = ["ai_engine", "legal_compliance", "tax_automation", 
+                                         "sales_automation", "email_automation", "invoice_automation"]
+                    
+                    missing_components = [comp for comp in required_components if comp not in system]
+                    if not missing_components and system.get("autonomy_level") == "92%":
+                        self.log_test("Autonomous System Status", True, "Autonomes System vollständig aktiv",
+                                    {"autonomy_level": system["autonomy_level"],
+                                     "ai_engine": system["ai_engine"],
+                                     "legal_compliance": system["legal_compliance"],
+                                     "daniel_integration": system.get("daniel_data_integration")})
+                        return True
+                    else:
+                        self.log_test("Autonomous System Status", False, f"Fehlende Komponenten: {missing_components}")
+                        return False
+                else:
+                    self.log_test("Autonomous System Status", False, "Unvollständige System-Status-Antwort")
+                    return False
+            else:
+                self.log_test("Autonomous System Status", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Autonomous System Status", False, f"System-Status Fehler: {str(e)}")
+            return False
+
+    def test_autonomous_business_metrics(self):
+        """Test Autonomous Business Metrics"""
+        try:
+            response = self.session.get(f"{self.api_url}/autonomous/business-metrics")
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("status") == "success" and "autonomous_metrics" in data:
+                    metrics = data["autonomous_metrics"]
+                    required_metrics = ["current_month_revenue", "current_month_transactions", 
+                                      "total_leads_processed", "total_offers_generated", 
+                                      "ai_conversion_rate", "automation_level"]
+                    
+                    missing_metrics = [metric for metric in required_metrics if metric not in metrics]
+                    if not missing_metrics and metrics.get("automation_level") == "92%":
+                        self.log_test("Autonomous Business Metrics", True, "Business-Metriken vollständig verfügbar",
+                                    {"revenue": metrics["current_month_revenue"],
+                                     "transactions": metrics["current_month_transactions"],
+                                     "leads": metrics["total_leads_processed"],
+                                     "conversion_rate": metrics["ai_conversion_rate"],
+                                     "automation_level": metrics["automation_level"]})
+                        return True
+                    else:
+                        self.log_test("Autonomous Business Metrics", False, f"Fehlende Metriken: {missing_metrics}")
+                        return False
+                else:
+                    self.log_test("Autonomous Business Metrics", False, "Unvollständige Metriken-Antwort")
+                    return False
+            else:
+                self.log_test("Autonomous Business Metrics", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Autonomous Business Metrics", False, f"Business-Metriken Fehler: {str(e)}")
+            return False
+
+    def test_autonomous_lead_processing(self):
+        """Test Autonomous Lead Processing with Real Data"""
+        try:
+            # Test mit realistischen Daten wie in der Anfrage
+            lead_data = {
+                "email": "max.mustermann@example.com",
+                "name": "Max Mustermann",
+                "company": "Mustermann GmbH",
+                "phone": "+49 123 456789",
+                "source": "website",
+                "interests": ["Digital Marketing", "Business Automation"],
+                "budget_range": "1000-5000€",
+                "urgency": "high",
+                "notes": "Interessiert an Digital Marketing Services und Business Automation für mittelständisches Unternehmen"
+            }
+            
+            response = self.session.post(f"{self.api_url}/autonomous/process-lead", json=lead_data)
+            if response.status_code == 200:
+                data = response.json()
+                if (data.get("status") == "success" and 
+                    "lead_id" in data and 
+                    "offer_id" in data and
+                    "estimated_conversion" in data):
+                    
+                    self.log_test("Autonomous Lead Processing", True, "Lead vollautomatisch verarbeitet",
+                                {"lead_id": data["lead_id"],
+                                 "offer_id": data["offer_id"],
+                                 "conversion_estimate": data["estimated_conversion"],
+                                 "message": data["message"]})
+                    return True
+                else:
+                    self.log_test("Autonomous Lead Processing", False, "Unvollständige Lead-Verarbeitung")
+                    return False
+            else:
+                self.log_test("Autonomous Lead Processing", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Autonomous Lead Processing", False, f"Lead-Processing Fehler: {str(e)}")
+            return False
+
+    def test_autonomous_sales_chat(self):
+        """Test AI Sales Chat System"""
+        try:
+            # Test mit realistischer Kundenanfrage
+            chat_data = {
+                "conversation_id": "lead-12345",
+                "customer_message": "Ich interessiere mich für Ihre Digital Marketing Services. Was können Sie mir anbieten?",
+                "customer_email": "max.mustermann@example.com"
+            }
+            
+            response = self.session.post(f"{self.api_url}/autonomous/sales-chat", json=chat_data)
+            if response.status_code == 200:
+                data = response.json()
+                if (data.get("status") == "success" and 
+                    "ai_response" in data and 
+                    "sales_stage" in data and
+                    "conversation_id" in data):
+                    
+                    self.log_test("Autonomous AI Sales Chat", True, "AI-Sales-Chat funktional",
+                                {"conversation_id": data["conversation_id"],
+                                 "sales_stage": data["sales_stage"],
+                                 "suggested_action": data.get("suggested_action"),
+                                 "response_length": len(data["ai_response"])})
+                    return True
+                else:
+                    self.log_test("Autonomous AI Sales Chat", False, "Unvollständige Chat-Antwort")
+                    return False
+            else:
+                self.log_test("Autonomous AI Sales Chat", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Autonomous AI Sales Chat", False, f"AI-Sales-Chat Fehler: {str(e)}")
+            return False
+
+    def test_autonomous_transaction_processing(self):
+        """Test Autonomous Transaction Processing"""
+        try:
+            # Test mit realistischen Transaktionsdaten
+            transaction_data = {
+                "amount": 1500.00,
+                "service_type": "digital_marketing",
+                "customer_email": "max.mustermann@example.com",
+                "customer_name": "Max Mustermann",
+                "payment_method": "paypal",
+                "additional_info": {
+                    "company": "Mustermann GmbH",
+                    "project": "Digital Marketing Setup"
+                }
+            }
+            
+            response = self.session.post(f"{self.api_url}/autonomous/complete-transaction", json=transaction_data)
+            if response.status_code == 200:
+                data = response.json()
+                if (data.get("status") == "success" and 
+                    "transaction_id" in data and 
+                    "invoice_id" in data and
+                    "net_amount" in data and
+                    "tax_amount" in data and
+                    "gross_amount" in data):
+                    
+                    # Validiere Steuerberechnung
+                    expected_tax = transaction_data["amount"] * 0.19
+                    expected_gross = transaction_data["amount"] + expected_tax
+                    
+                    tax_correct = abs(data["tax_amount"] - expected_tax) < 0.01
+                    gross_correct = abs(data["gross_amount"] - expected_gross) < 0.01
+                    
+                    if tax_correct and gross_correct:
+                        self.log_test("Autonomous Transaction Processing", True, "Transaktion vollautomatisch verarbeitet",
+                                    {"transaction_id": data["transaction_id"],
+                                     "invoice_id": data["invoice_id"],
+                                     "net_amount": data["net_amount"],
+                                     "tax_amount": data["tax_amount"],
+                                     "gross_amount": data["gross_amount"],
+                                     "steuer_id_integration": "DE4535548228"})
+                        return True
+                    else:
+                        self.log_test("Autonomous Transaction Processing", False, "Steuerberechnung fehlerhaft")
+                        return False
+                else:
+                    self.log_test("Autonomous Transaction Processing", False, "Unvollständige Transaktions-Verarbeitung")
+                    return False
+            else:
+                self.log_test("Autonomous Transaction Processing", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Autonomous Transaction Processing", False, f"Transaktions-Processing Fehler: {str(e)}")
+            return False
+
     def run_all_tests(self):
         """Run all backend tests"""
         print("=" * 60)
