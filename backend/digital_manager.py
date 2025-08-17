@@ -166,9 +166,14 @@ class DigitalManagerService:
             "birth_date": "22.06.1981",
             "birth_place": "Zeitz",
             "address": "06712 Zeitz, Deutschland",
-            "email": "daniel@zz-lobby-elite.de",
-            "company": "ZZ-Lobby Elite",
-            "business_type": "Digital Business Automation"
+            "email": "daniel@zz-lobby.de",
+            "company": "ZZ-Lobby",
+            "business_type": "Digitale Business-Automatisierung und Online-Marketing",
+            "steuer_id": "69 377 041825",
+            "elster_benutzer_id": "11060026",
+            "umsatzsteuer_nummer": "DE 453548228",
+            "umsatzsteuer_id": "DE4535548228",
+            "umsatzsteuer_anlage": "gz:St III 2 -S7427-c-"
         }
 
     async def request_insurance_consultation(self, request: InsuranceRequest) -> Dict[str, Any]:
