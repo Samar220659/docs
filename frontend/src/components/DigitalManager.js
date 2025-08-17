@@ -40,11 +40,11 @@ const DigitalManager = () => {
   // Legal Document State
   const [legalForm, setLegalForm] = useState({
     document_type: 'agb',
-    company_name: 'ZZ-Lobby Elite',
+    company_name: 'ZZ-Lobby',
     business_address: '06712 Zeitz, Deutschland',
-    contact_email: 'daniel@zz-lobby-elite.de',
-    vat_id: '',
-    business_type: 'Digital Business Automation'
+    contact_email: 'daniel@zz-lobby.de',
+    vat_id: 'DE4535548228',
+    business_type: 'Digitale Business-Automatisierung und Online-Marketing'
   });
 
   // Email State
