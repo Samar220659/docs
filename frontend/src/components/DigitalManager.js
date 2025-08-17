@@ -147,7 +147,7 @@ const DigitalManager = () => {
 
     try {
       setLoading(true);
-      const response = await api.post('/digital-manager/tax-calculation', taxDocuments);
+      const response = await digitalManagerApi.calculateTax(taxDocuments);
       setTaxCalculation(response.data);
       
       toast({
