@@ -220,6 +220,10 @@ app.include_router(automation_router)  # Automation Engine
 app.include_router(ai_router)  # AI Marketing Engine
 app.include_router(monitoring_router)  # System Monitoring
 
+# Digital Manager System Import
+from digital_manager import digital_manager_router
+app.include_router(digital_manager_router)  # Digital Manager System
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
