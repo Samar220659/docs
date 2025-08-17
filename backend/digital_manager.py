@@ -265,7 +265,8 @@ class DigitalManagerService:
                 "priority": request.priority
             }
             
-            await self.db.insurance_requests.insert_one(insurance_record)
+            insurance_record_copy = insurance_record.copy()
+            await self.db.insurance_requests.insert_one(insurance_record_copy)
             
             self.logger.info(f"🛡️ Versicherungsanfrage ({request.request_type}) an Thomas Kaiser gesendet")
             
