@@ -172,7 +172,7 @@ const DigitalManager = () => {
   const generateLegalDocument = async () => {
     try {
       setLoading(true);
-      const response = await api.post('/digital-manager/legal-document', legalForm);
+      const response = await digitalManagerApi.generateLegalDoc(legalForm);
       setGeneratedDocument(response.data);
       
       toast({
