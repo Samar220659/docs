@@ -31,6 +31,7 @@ function App() {
           <Route path="/ai-marketing" element={<AIMarketingHub />} />
           <Route path="/digital-manager" element={<DigitalManager />} />
           <Route path="/autonomous-hub" element={<AutonomousHub />} />
+          <Route path="/production-launch" element={<ProductionLaunch />} />
         </Routes>
         <Toaster />
       </BrowserRouter>
