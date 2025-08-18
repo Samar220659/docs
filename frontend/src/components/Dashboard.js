@@ -241,6 +241,21 @@ export default function Dashboard() {
               <p className="text-sm text-gray-400">92% autonome KI-Geldmaschine</p>
             </CardContent>
           </Card>
+
+          <Card className="bg-gradient-to-br from-red-500/20 to-rose-500/20 border-red-500/30 hover:from-red-500/30 hover:to-rose-500/30 transition-all duration-300 cursor-pointer"
+                onClick={() => handleNavigation('/production-launch')}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="text-2xl">🔥</div>
+                <div className="text-right">
+                  <div className="text-sm text-red-400">LIVE</div>
+                  <div className="text-xs text-gray-400">87%</div>
+                </div>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Production Launch</h3>
+              <p className="text-sm text-gray-400">ECHTES Geld verdienen starten!</p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* SaaS System Status */}
