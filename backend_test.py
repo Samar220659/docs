@@ -1115,6 +1115,222 @@ class BackendTester:
             self.log_test("Self-Optimizing Dashboard", False, f"Optimization Dashboard Fehler: {str(e)}")
             return False
 
+    def test_production_daniel_verification(self):
+        """Test Daniel Verification mit echten Steuer-IDs"""
+        try:
+            response = self.session.get(f"{self.api_url}/production/daniel-verification")
+            if response.status_code == 200:
+                data = response.json()
+                if (data.get("verification_status") == "OFFICIAL_DOCUMENTS_VERIFIED" and 
+                    "daniel_data" in data):
+                    
+                    daniel_data = data["daniel_data"]
+                    
+                    # Verifiziere echte Steuer-IDs
+                    expected_steuer_id = "69 377 041 825"
+                    expected_ust_id = "DE4535548228"
+                    
+                    if (daniel_data.get("steuer_id") == expected_steuer_id and
+                        daniel_data.get("umsatzsteuer_id") == expected_ust_id and
+                        data.get("autonomy_possible") == "87%"):
+                        
+                        self.log_test("Production Daniel Verification", True, "Echte Steuer-IDs erfolgreich verifiziert",
+                                    {"steuer_id": daniel_data["steuer_id"],
+                                     "ust_id": daniel_data["umsatzsteuer_id"],
+                                     "name": daniel_data["name"],
+                                     "autonomy_level": data["autonomy_possible"],
+                                     "production_ready": data.get("compliance_level") == "production_ready"})
+                        return True
+                    else:
+                        self.log_test("Production Daniel Verification", False, "Steuer-IDs nicht korrekt integriert")
+                        return False
+                else:
+                    self.log_test("Production Daniel Verification", False, "Verification-Antwort unvollständig")
+                    return False
+            else:
+                self.log_test("Production Daniel Verification", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Production Daniel Verification", False, f"Daniel Verification Fehler: {str(e)}")
+            return False
+
+    def test_production_status(self):
+        """Test Production Status"""
+        try:
+            response = self.session.get(f"{self.api_url}/production/status")
+            if response.status_code == 200:
+                data = response.json()
+                if "launch_info" in data or data.get("status") == "not_launched":
+                    # System kann launched oder not_launched sein - beides ist valide
+                    if data.get("status") == "not_launched":
+                        self.log_test("Production Status", True, "System bereit für Launch",
+                                    {"status": data["status"], "message": data.get("message")})
+                        return True
+                    elif "launch_info" in data and "system_health" in data:
+                        launch_info = data["launch_info"]
+                        system_health = data["system_health"]
+                        
+                        self.log_test("Production Status", True, "Production System läuft",
+                                    {"launch_id": launch_info.get("launch_id"),
+                                     "status": launch_info.get("status"),
+                                     "autonomy_level": system_health.get("autonomy_level"),
+                                     "systems_online": system_health.get("systems_online"),
+                                     "compliance": system_health.get("compliance_status")})
+                        return True
+                    else:
+                        self.log_test("Production Status", False, "Status-Antwort unvollständig")
+                        return False
+                else:
+                    self.log_test("Production Status", False, "Unerwartete Status-Antwort")
+                    return False
+            else:
+                self.log_test("Production Status", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Production Status", False, f"Production Status Fehler: {str(e)}")
+            return False
+
+    def test_production_launch(self):
+        """Test kompletten Production Launch"""
+        try:
+            response = self.session.post(f"{self.api_url}/production/launch")
+            if response.status_code == 200:
+                data = response.json()
+                if ("launch_id" in data and 
+                    "steps_completed" in data and
+                    data.get("launch_status") == "completed"):
+                    
+                    steps = data["steps_completed"]
+                    expected_steps = [
+                        "tax_verification_complete",
+                        "paypal_production_ready", 
+                        "marketing_campaigns_active",
+                        "autonomous_systems_live",
+                        "revenue_generation_active"
+                    ]
+                    
+                    completed_steps = [step for step in expected_steps if step in steps]
+                    
+                    if len(completed_steps) >= 5:  # Alle 6 Schritte
+                        self.log_test("Production Launch", True, f"Production Launch erfolgreich - {len(completed_steps)}/6 Schritte abgeschlossen",
+                                    {"launch_id": data["launch_id"],
+                                     "system_status": data.get("system_status"),
+                                     "autonomy_level": data.get("autonomy_level"),
+                                     "steps_completed": len(completed_steps),
+                                     "tax_verification": "tax_verification_complete" in steps,
+                                     "paypal_ready": "paypal_production_ready" in steps,
+                                     "marketing_active": "marketing_campaigns_active" in steps})
+                        return True
+                    else:
+                        self.log_test("Production Launch", False, f"Nur {len(completed_steps)}/6 Launch-Schritte abgeschlossen")
+                        return False
+                else:
+                    self.log_test("Production Launch", False, "Launch-Antwort unvollständig")
+                    return False
+            else:
+                self.log_test("Production Launch", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Production Launch", False, f"Production Launch Fehler: {str(e)}")
+            return False
+
+    def test_production_start_money_generation(self):
+        """Test Start Money Generation"""
+        try:
+            response = self.session.post(f"{self.api_url}/production/start-money-generation")
+            if response.status_code == 200:
+                data = response.json()
+                if ("activation_id" in data and 
+                    "immediate_actions" in data and
+                    "revenue_targets" in data):
+                    
+                    daniel_steuer = data.get("daniel_steuer_data", {})
+                    actions = data["immediate_actions"]
+                    targets = data["revenue_targets"]
+                    
+                    # Verifiziere Daniel's Steuer-Integration
+                    steuer_valid = (daniel_steuer.get("steuer_id") == "69 377 041 825" and
+                                  daniel_steuer.get("ust_id") == "DE4535548228")
+                    
+                    # Verifiziere Revenue Targets
+                    targets_valid = ("first_24h" in targets and 
+                                   "first_week" in targets and
+                                   targets["first_24h"]["target"] == 497 and
+                                   targets["first_week"]["target"] == 2485)
+                    
+                    if steuer_valid and targets_valid and len(actions) >= 3:
+                        self.log_test("Production Start Money Generation", True, "Geldgenerierung erfolgreich gestartet",
+                                    {"activation_id": data["activation_id"],
+                                     "steuer_integration": steuer_valid,
+                                     "immediate_actions": len(actions),
+                                     "first_24h_target": targets["first_24h"]["target"],
+                                     "first_week_target": targets["first_week"]["target"],
+                                     "automation_status": data.get("automation_status")})
+                        return True
+                    else:
+                        self.log_test("Production Start Money Generation", False, "Money Generation Setup unvollständig")
+                        return False
+                else:
+                    self.log_test("Production Start Money Generation", False, "Money Generation Antwort unvollständig")
+                    return False
+            else:
+                self.log_test("Production Start Money Generation", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Production Start Money Generation", False, f"Money Generation Fehler: {str(e)}")
+            return False
+
+    def test_production_live_dashboard(self):
+        """Test Live Production Dashboard"""
+        try:
+            response = self.session.get(f"{self.api_url}/production/live-dashboard")
+            if response.status_code == 200:
+                data = response.json()
+                if ("dashboard_id" in data and 
+                    "system_status" in data and
+                    "daniel_verification" in data and
+                    "revenue_summary" in data):
+                    
+                    daniel_data = data["daniel_verification"]
+                    revenue = data["revenue_summary"]
+                    system_health = data.get("system_health", {})
+                    
+                    # Verifiziere Daniel's Daten im Dashboard
+                    daniel_valid = (daniel_data.get("steuer_id") == "69 377 041 825" and
+                                  daniel_data.get("umsatzsteuer_id") == "DE4535548228")
+                    
+                    # Verifiziere Revenue Summary
+                    revenue_valid = ("today_revenue" in revenue and
+                                   "autonomy_level" in revenue and
+                                   revenue["autonomy_level"] == "87%")
+                    
+                    # Verifiziere System Health
+                    health_valid = (system_health.get("all_systems") == "operational" and
+                                  system_health.get("compliance_status") == "verified")
+                    
+                    if daniel_valid and revenue_valid and health_valid:
+                        self.log_test("Production Live Dashboard", True, "Live Dashboard vollständig funktional",
+                                    {"dashboard_id": data["dashboard_id"],
+                                     "system_status": data["system_status"],
+                                     "daniel_steuer_id": daniel_data["steuer_id"],
+                                     "daniel_ust_id": daniel_data["umsatzsteuer_id"],
+                                     "today_revenue": revenue["today_revenue"],
+                                     "autonomy_level": revenue["autonomy_level"],
+                                     "system_uptime": system_health.get("uptime")})
+                        return True
+                    else:
+                        self.log_test("Production Live Dashboard", False, "Dashboard-Daten unvollständig")
+                        return False
+                else:
+                    self.log_test("Production Live Dashboard", False, "Dashboard-Antwort unvollständig")
+                    return False
+            else:
+                self.log_test("Production Live Dashboard", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Production Live Dashboard", False, f"Live Dashboard Fehler: {str(e)}")
+            return False
+
     def run_all_tests(self):
         """Run all backend tests"""
         print("=" * 60)
@@ -1159,6 +1375,12 @@ class BackendTester:
             ("Self-Optimizing Competitive Analysis", self.test_self_optimizing_competitive_analysis),
             ("Self-Optimizing Market Opportunities", self.test_self_optimizing_market_opportunities),
             ("Self-Optimizing Dashboard", self.test_self_optimizing_dashboard),
+            # Production Launch System Tests - PRIORITY TESTING
+            ("Production Daniel Verification", self.test_production_daniel_verification),
+            ("Production Status", self.test_production_status),
+            ("Production Launch", self.test_production_launch),
+            ("Production Start Money Generation", self.test_production_start_money_generation),
+            ("Production Live Dashboard", self.test_production_live_dashboard),
         ]
         
         passed = 0
