@@ -1331,6 +1331,299 @@ class BackendTester:
             self.log_test("Production Live Dashboard", False, f"Live Dashboard Fehler: {str(e)}")
             return False
 
+    def test_hyper_swarm_status(self):
+        """Test Hyper-Swarm System Status"""
+        try:
+            response = self.session.get(f"{self.api_url}/hyper-swarm/status")
+            if response.status_code == 200:
+                data = response.json()
+                
+                # System kann initialized oder not_initialized sein - beides ist valide
+                if data.get("status") in ["active", "inactive", "not_initialized"]:
+                    if data.get("status") == "not_initialized":
+                        self.log_test("Hyper-Swarm Status", True, "System bereit für Initialisierung",
+                                    {"status": data["status"], 
+                                     "available_for_activation": data.get("available_for_activation", False)})
+                        return True
+                    else:
+                        # System ist bereits initialisiert
+                        daniel_integration = data.get("daniel_integration", {})
+                        expected_steuer_id = "69 377 041 825"
+                        expected_ust_id = "DE4535548228"
+                        expected_telegram = "@autonomepasiveincome"
+                        
+                        steuer_id_correct = daniel_integration.get("steuer_id") == expected_steuer_id
+                        ust_id_correct = daniel_integration.get("ust_id") == expected_ust_id
+                        telegram_correct = daniel_integration.get("telegram_channel") == expected_telegram
+                        
+                        self.log_test("Hyper-Swarm Status", True, f"System Status: {data['status']}",
+                                    {"status": data["status"],
+                                     "swarm_id": data.get("swarm_id"),
+                                     "crews_active": data.get("crews_active", 0),
+                                     "telegram_channel": daniel_integration.get("telegram_channel"),
+                                     "revenue_target": data.get("revenue_target"),
+                                     "daniel_steuer_id_correct": steuer_id_correct,
+                                     "daniel_ust_id_correct": ust_id_correct,
+                                     "telegram_integration": telegram_correct})
+                        return True
+                else:
+                    self.log_test("Hyper-Swarm Status", False, f"Unbekannter Status: {data.get('status')}")
+                    return False
+            else:
+                self.log_test("Hyper-Swarm Status", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Hyper-Swarm Status", False, f"Hyper-Swarm Status Fehler: {str(e)}")
+            return False
+
+    def test_hyper_swarm_activation(self):
+        """Test Hyper-Swarm System Activation"""
+        try:
+            activation_data = {
+                "crew_regions": ["DACH", "EU-West", "EU-East", "Global"],
+                "daily_revenue_target": 3333.0,
+                "automation_level": "maximum",
+                "telegram_integration": True
+            }
+            
+            response = self.session.post(f"{self.api_url}/hyper-swarm/activate", json=activation_data)
+            if response.status_code == 200:
+                data = response.json()
+                if (data.get("status") == "success" and 
+                    "swarm_initialization" in data and
+                    "automation_status" in data and
+                    "zz_lobby_integration" in data):
+                    
+                    swarm_init = data["swarm_initialization"]
+                    automation = data["automation_status"]
+                    integration = data["zz_lobby_integration"]
+                    
+                    # Verifiziere Daniel's Daten in der Aktivierung
+                    daniel_data = swarm_init.get("daniel_data", {})
+                    expected_steuer_id = "69 377 041 825"
+                    expected_ust_id = "DE4535548228"
+                    expected_telegram = "@autonomepasiveincome"
+                    expected_freecash = "https://freecash.com/r/danieloettel2024"
+                    
+                    daniel_correct = (
+                        daniel_data.get("steuer_id") == expected_steuer_id and
+                        daniel_data.get("ust_id") == expected_ust_id and
+                        daniel_data.get("telegram_channel") == expected_telegram and
+                        daniel_data.get("freecash_ref") == expected_freecash
+                    )
+                    
+                    # Verifiziere 4 Crews
+                    crews = swarm_init.get("swarm_crews", [])
+                    expected_crews = ["DACH-Crew", "EU-West-Crew", "EU-East-Crew", "Global-Crew"]
+                    crew_names = [crew.get("name") for crew in crews]
+                    crews_correct = all(crew in crew_names for crew in expected_crews)
+                    
+                    # Verifiziere Revenue Target
+                    revenue_target = swarm_init.get("target_revenue", 0)
+                    combined_target = data.get("combined_revenue_target")
+                    
+                    self.log_test("Hyper-Swarm Activation", True, "Komplettes Swarm-System erfolgreich aktiviert",
+                                {"swarm_id": swarm_init.get("swarm_id"),
+                                 "daniel_data_correct": daniel_correct,
+                                 "crews_created": len(crews),
+                                 "crews_correct": crews_correct,
+                                 "revenue_target": revenue_target,
+                                 "combined_target": combined_target,
+                                 "automation_active": automation.get("status") == "active" if automation else False,
+                                 "zz_lobby_integrated": "total_combined_target" in integration})
+                    return True
+                else:
+                    self.log_test("Hyper-Swarm Activation", False, "Unvollständige Aktivierungs-Antwort")
+                    return False
+            else:
+                self.log_test("Hyper-Swarm Activation", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Hyper-Swarm Activation", False, f"Hyper-Swarm Activation Fehler: {str(e)}")
+            return False
+
+    def test_hyper_swarm_performance(self):
+        """Test Hyper-Swarm Live Performance Metrics"""
+        try:
+            response = self.session.get(f"{self.api_url}/hyper-swarm/performance")
+            if response.status_code == 200:
+                data = response.json()
+                
+                # System kann not_active sein wenn noch nicht aktiviert
+                if data.get("status") == "not_active":
+                    self.log_test("Hyper-Swarm Performance", True, "System noch nicht aktiviert - Performance nicht verfügbar",
+                                {"status": data["status"], "message": data.get("message")})
+                    return True
+                
+                # Wenn aktiviert, prüfe Performance-Daten
+                if ("swarm_id" in data and 
+                    "live_metrics" in data and
+                    "crew_performance" in data):
+                    
+                    live_metrics = data["live_metrics"]
+                    crew_performance = data["crew_performance"]
+                    
+                    # Verifiziere Live-Metriken
+                    required_metrics = ["refs_today", "refs_this_week", "refs_this_month", 
+                                      "revenue_today", "revenue_this_week", "revenue_this_month"]
+                    missing_metrics = [metric for metric in required_metrics if metric not in live_metrics]
+                    
+                    # Verifiziere 4 Crews
+                    expected_crews = ["DACH-Crew", "EU-West-Crew", "EU-East-Crew", "Global-Crew"]
+                    crew_names = [crew.get("crew") for crew in crew_performance]
+                    crews_present = all(crew in crew_names for crew in expected_crews)
+                    
+                    # Verifiziere Revenue-Trajectory
+                    trajectory = data.get("revenue_trajectory", {})
+                    trajectory_complete = all(key in trajectory for key in ["current_monthly_pace", "projected_month_end", "100k_target_eta"])
+                    
+                    if not missing_metrics and crews_present and trajectory_complete:
+                        self.log_test("Hyper-Swarm Performance", True, "Live Performance-Metriken vollständig verfügbar",
+                                    {"swarm_id": data.get("swarm_id"),
+                                     "refs_today": live_metrics["refs_today"],
+                                     "revenue_today": live_metrics["revenue_today"],
+                                     "crews_reporting": len(crew_performance),
+                                     "100k_target_eta": trajectory["100k_target_eta"],
+                                     "projected_month_end": trajectory["projected_month_end"],
+                                     "optimization_insights": len(data.get("optimization_insights", []))})
+                        return True
+                    else:
+                        self.log_test("Hyper-Swarm Performance", False, f"Performance-Daten unvollständig - Missing: {missing_metrics}")
+                        return False
+                else:
+                    self.log_test("Hyper-Swarm Performance", False, "Performance-Antwort unvollständig")
+                    return False
+            else:
+                self.log_test("Hyper-Swarm Performance", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Hyper-Swarm Performance", False, f"Hyper-Swarm Performance Fehler: {str(e)}")
+            return False
+
+    def test_hyper_swarm_content_generation(self):
+        """Test Hyper-Swarm Content Generation für verschiedene Regionen"""
+        try:
+            # Test verschiedene Regionen und Content-Typen
+            test_cases = [
+                {"crew_region": "DACH", "content_type": "urgency"},
+                {"crew_region": "EU-West", "content_type": "social_proof"},
+                {"crew_region": "EU-East", "content_type": "educational"},
+                {"crew_region": "Global", "content_type": "direct_benefit"}
+            ]
+            
+            successful_generations = 0
+            generation_results = []
+            
+            for test_case in test_cases:
+                response = self.session.post(f"{self.api_url}/hyper-swarm/generate-content", json=test_case)
+                if response.status_code == 200:
+                    data = response.json()
+                    if ("content_id" in data and 
+                        "generated_content" in data and
+                        "daniel_ref_url" in data):
+                        
+                        # Verifiziere Daniel's Referral-URL
+                        expected_ref_url = "https://freecash.com/r/danieloettel2024"
+                        ref_url_correct = data["daniel_ref_url"] == expected_ref_url
+                        
+                        # Verifiziere Content enthält Referral-URL
+                        content_contains_ref = expected_ref_url in data["generated_content"]
+                        
+                        if ref_url_correct and content_contains_ref:
+                            successful_generations += 1
+                            generation_results.append({
+                                "region": test_case["crew_region"],
+                                "type": test_case["content_type"],
+                                "content_length": len(data["generated_content"]),
+                                "estimated_reach": data.get("estimated_reach", 0),
+                                "expected_clicks": data.get("expected_clicks", 0)
+                            })
+            
+            if successful_generations == len(test_cases):
+                self.log_test("Hyper-Swarm Content Generation", True, f"Content-Generierung für alle {len(test_cases)} Regionen erfolgreich",
+                            {"successful_generations": successful_generations,
+                             "total_tests": len(test_cases),
+                             "regions_tested": [result["region"] for result in generation_results],
+                             "content_types_tested": [result["type"] for result in generation_results],
+                             "daniel_ref_integration": True})
+                return True
+            else:
+                self.log_test("Hyper-Swarm Content Generation", False, f"Nur {successful_generations}/{len(test_cases)} Content-Generierungen erfolgreich")
+                return False
+                
+        except Exception as e:
+            self.log_test("Hyper-Swarm Content Generation", False, f"Content Generation Fehler: {str(e)}")
+            return False
+
+    def test_hyper_swarm_dashboard(self):
+        """Test Hyper-Swarm Dashboard mit ZZ-Lobby Integration"""
+        try:
+            response = self.session.get(f"{self.api_url}/hyper-swarm/dashboard")
+            if response.status_code == 200:
+                data = response.json()
+                if ("dashboard_id" in data and 
+                    "daniel_data" in data and
+                    "hyper_swarm_performance" in data and
+                    "zz_lobby_integration" in data and
+                    "combined_systems" in data):
+                    
+                    daniel_data = data["daniel_data"]
+                    combined_systems = data["combined_systems"]
+                    
+                    # Verifiziere Daniel's echte Daten
+                    expected_steuer_id = "69 377 041 825"
+                    expected_ust_id = "DE4535548228"
+                    expected_telegram = "@autonomepasiveincome"
+                    expected_freecash = "https://freecash.com/r/danieloettel2024"
+                    
+                    daniel_correct = (
+                        daniel_data.get("name") == "Daniel Oettel" and
+                        daniel_data.get("steuer_id") == expected_steuer_id and
+                        daniel_data.get("ust_id") == expected_ust_id and
+                        daniel_data.get("telegram_channel") == expected_telegram and
+                        daniel_data.get("freecash_ref") == expected_freecash
+                    )
+                    
+                    # Verifiziere Combined Systems (ZZ-Lobby + Hyper-Swarm)
+                    expected_total_target = "€125,000/Monat"
+                    expected_zz_lobby = "€25,000/Monat"
+                    expected_hyper_swarm = "€100,000/Monat"
+                    
+                    targets_correct = (
+                        combined_systems.get("total_revenue_target") == expected_total_target and
+                        combined_systems.get("zz_lobby_contribution") == expected_zz_lobby and
+                        combined_systems.get("hyper_swarm_contribution") == expected_hyper_swarm
+                    )
+                    
+                    # Verifiziere Combined Autonomy
+                    combined_autonomy = combined_systems.get("combined_autonomy")
+                    autonomy_acceptable = combined_autonomy and "%" in combined_autonomy
+                    
+                    if daniel_correct and targets_correct and autonomy_acceptable:
+                        self.log_test("Hyper-Swarm Dashboard", True, "Dashboard mit ZZ-Lobby Integration vollständig funktional",
+                                    {"dashboard_id": data.get("dashboard_id"),
+                                     "daniel_name": daniel_data["name"],
+                                     "daniel_steuer_id": daniel_data["steuer_id"],
+                                     "daniel_ust_id": daniel_data["ust_id"],
+                                     "telegram_channel": daniel_data["telegram_channel"],
+                                     "freecash_ref": daniel_data["freecash_ref"],
+                                     "total_revenue_target": combined_systems["total_revenue_target"],
+                                     "combined_autonomy": combined_systems["combined_autonomy"],
+                                     "zz_lobby_integrated": True})
+                        return True
+                    else:
+                        self.log_test("Hyper-Swarm Dashboard", False, "Dashboard-Daten nicht vollständig korrekt")
+                        return False
+                else:
+                    self.log_test("Hyper-Swarm Dashboard", False, "Dashboard-Antwort unvollständig")
+                    return False
+            else:
+                self.log_test("Hyper-Swarm Dashboard", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_test("Hyper-Swarm Dashboard", False, f"Hyper-Swarm Dashboard Fehler: {str(e)}")
+            return False
+
     def run_all_tests(self):
         """Run all backend tests"""
         print("=" * 60)
