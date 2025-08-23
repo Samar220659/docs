@@ -13,6 +13,7 @@ import AIMarketingHub from "./components/AIMarketingHub";
 import DigitalManager from "./components/DigitalManager";
 import AutonomousHub from "./components/AutonomousHub";
 import ProductionLaunch from "./components/ProductionLaunch";
+import HyperSwarm from "./components/HyperSwarm";
 import "./App.css";
 
 function App() {
