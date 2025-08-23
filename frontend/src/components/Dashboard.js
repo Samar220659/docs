@@ -256,6 +256,28 @@ export default function Dashboard() {
               <p className="text-sm text-gray-400">ECHTES Geld verdienen starten!</p>
             </CardContent>
           </Card>
+          
+          <Card className="bg-gradient-to-br from-orange-500/20 to-red-500/20 border-orange-500/30 hover:from-orange-500/30 hover:to-red-500/30 transition-all duration-300 cursor-pointer col-span-full"
+                onClick={() => handleNavigation('/hyper-swarm')}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="text-3xl">🚀🔥</div>
+                <div className="text-right">
+                  <div className="text-sm text-orange-400">MEGA</div>
+                  <div className="text-xs text-gray-400">€100k/M</div>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">
+                HYPER-SWARM REF-CASH-SYSTEM
+              </h3>
+              <p className="text-sm text-gray-400">🎯 €100.000/Monat passive Income-Machine - ERSETZT ALLES!</p>
+              <div className="flex gap-2 mt-3">
+                <div className="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded">Freecash Automation</div>
+                <div className="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded">Telegram @autonomepasiveincome</div>
+                <div className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">4 Regional Crews</div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* SaaS System Status */}
