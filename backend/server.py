@@ -236,6 +236,10 @@ app.include_router(optimization_router)  # Self-Optimizing Revenue Machine
 from production_launcher import production_router
 app.include_router(production_router)  # Production Launch System
 
+# Hyper-Swarm Engine Import - MEGA-REVENUE-SYSTEM  
+from hyper_swarm_engine import swarm_router
+app.include_router(swarm_router)  # Hyper-Swarm Referral Engine
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
