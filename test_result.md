@@ -118,7 +118,7 @@ backend:
         comment: "Basic FastAPI server with API routes for status, PayPal, automation, analytics"
       - working: true
         agent: "testing"
-        comment: "✅ TESTED: Server responding correctly at https://zz-lobby-app.preview.emergentagent.com/api. All core API endpoints functional including dashboard, analytics, automations, and SaaS status. CORS configured properly."
+        comment: "✅ TESTED: Server responding correctly at https://zz-lobby-elite-2.preview.emergentagent.com/api. All core API endpoints functional including dashboard, analytics, automations, and SaaS status. CORS configured properly."
 
   - task: "PayPal Integration"
     implemented: true

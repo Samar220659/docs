@@ -19,7 +19,7 @@ sys.path.append('/app/backend')
 class BackendTester:
     def __init__(self):
         # Get backend URL from frontend env
-        self.base_url = "https://zz-lobby-app.preview.emergentagent.com"
+        self.base_url = "https://zz-lobby-elite-2.preview.emergentagent.com"
         try:
             with open('/app/frontend/.env', 'r') as f:
                 for line in f:
