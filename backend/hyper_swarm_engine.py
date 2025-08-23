@@ -265,6 +265,53 @@ Hol dir sofort **€50 FREECASH BONUS:**
         
         return variations
 
+    async def _activate_revenue_automation(self) -> Dict[str, Any]:
+        """Aktiviert Revenue-Automation für das Swarm-System"""
+        revenue_automation = {
+            "automation_id": str(uuid.uuid4()),
+            "activated_at": datetime.now(),
+            "freecash_integration": {
+                "base_url": self.freecash_ref_base,
+                "daniel_ref_id": self.daniel_ref_id,
+                "commission_rate": self.revenue_streams["freecash_referrals"]["base_commission"],
+                "status": "active"
+            },
+            "telegram_monetization": {
+                "channel": self.telegram_channel,
+                "premium_pricing": self.revenue_streams["telegram_monetization"]["premium_access"],
+                "coaching_pricing": self.revenue_streams["telegram_monetization"]["coaching_calls"],
+                "dfy_pricing": self.revenue_streams["telegram_monetization"]["done_for_you"],
+                "status": "active"
+            },
+            "revenue_targets": {
+                "daily_target": self.swarm_config["daily_revenue_target"],
+                "monthly_target": self.swarm_config["total_revenue_target"],
+                "refs_needed_daily": self.swarm_config["refs_needed_daily"]
+            }
+        }
+        return revenue_automation
+
+    async def _setup_swarm_monitoring(self) -> Dict[str, Any]:
+        """Setup für Swarm-Monitoring"""
+        monitoring_config = {
+            "monitoring_id": str(uuid.uuid4()),
+            "setup_date": datetime.now(),
+            "metrics_tracked": [
+                "referral_conversions",
+                "revenue_per_crew",
+                "content_performance",
+                "telegram_engagement",
+                "freecash_earnings"
+            ],
+            "reporting_frequency": "real_time",
+            "alert_thresholds": {
+                "low_performance": 0.15,  # 15% unter Target
+                "high_performance": 1.25   # 25% über Target
+            },
+            "status": "active"
+        }
+        return monitoring_config
+
     async def activate_swarm_automation(self) -> Dict[str, Any]:
         """Aktiviert die komplette Swarm-Automation"""
         try:
