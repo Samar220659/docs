@@ -727,7 +727,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Hyper-Swarm Ref-Cash-System Backend Testing"
     - "Hyper-Swarm Frontend Component Testing"
   stuck_tasks: []
   test_all: false
