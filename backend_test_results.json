@@ -1,396 +1,253 @@
 {
   "Server Connectivity": {
-    "success": true,
-    "message": "Server is responding",
+    "success": false,
+    "message": "Server returned status 502",
     "details": {
-      "status_code": 200,
-      "response": {
-        "message": "ZZ-Lobby Elite API with Automation Engine is running"
-      }
+      "status_code": 502
     },
-    "timestamp": "2025-08-18T14:31:08.369574"
+    "timestamp": "2025-08-23T00:32:52.836067"
   },
   "MongoDB Integration": {
-    "success": true,
-    "message": "Database read/write operations working",
+    "success": false,
+    "message": "Failed to write to database: HTTP 502",
     "details": {
-      "created_id": "99e6ed8c-f3fc-4010-a7e7-1de5c89852a9",
-      "total_records": 10
+      "response": ""
     },
-    "timestamp": "2025-08-18T14:31:08.439176"
+    "timestamp": "2025-08-23T00:32:52.847860"
   },
   "PayPal Integration": {
-    "success": true,
-    "message": "Payment creation and retrieval working",
+    "success": false,
+    "message": "Payment creation failed: HTTP 502",
     "details": {
-      "payment_id": "1755527468.485395",
-      "total_payments": 10
+      "response": ""
     },
-    "timestamp": "2025-08-18T14:31:08.514554"
+    "timestamp": "2025-08-23T00:32:52.854712"
   },
   "Dashboard Stats API": {
-    "success": true,
-    "message": "All required fields present",
-    "details": {
-      "earnings": "0.00",
-      "automations": 4
-    },
-    "timestamp": "2025-08-18T14:31:08.524282"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:52.865146"
   },
   "Analytics API": {
-    "success": true,
-    "message": "Analytics data complete",
-    "details": {
-      "revenue_today": 247.83,
-      "total_leads": 1247,
-      "platforms_count": 5
-    },
-    "timestamp": "2025-08-18T14:31:08.574819"
+    "success": false,
+    "message": "Analytics API failed: HTTP 502",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:52.872101"
   },
   "Automation Engine": {
-    "success": true,
-    "message": "Automation CRUD operations working",
-    "details": {
-      "total_automations": 5,
-      "toggle_success": true,
-      "optimize_success": true,
-      "status_endpoint": true
-    },
-    "timestamp": "2025-08-18T14:31:08.654324"
+    "success": false,
+    "message": "Failed to get automations: HTTP 502",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:52.880980"
   },
   "AI Marketing Engine": {
-    "success": true,
-    "message": "AI marketing system fully functional",
-    "details": {
-      "total_leads": 5,
-      "conversion_rate": 0.0,
-      "campaign_success": true,
-      "super_seller_working": true
-    },
-    "timestamp": "2025-08-18T14:31:09.870040"
+    "success": false,
+    "message": "Status endpoint failed: 502",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:52.888131"
   },
   "System Monitoring": {
-    "success": true,
-    "message": "System monitoring operational (4/4 endpoints)",
+    "success": false,
+    "message": "Only 0/4 monitoring endpoints working",
     "details": {
-      "health": true,
-      "dependencies": true,
-      "api_monitoring": true,
-      "dashboard": true
+      "health": false,
+      "dependencies": false,
+      "api_monitoring": false,
+      "dashboard": false
     },
-    "timestamp": "2025-08-18T14:32:53.691652"
+    "timestamp": "2025-08-23T00:32:52.913836"
   },
   "SaaS Status API": {
-    "success": true,
-    "message": "SaaS status and launch working",
-    "details": {
-      "system_health": 98,
-      "active_users": 1247,
-      "components_count": 6,
-      "launch_working": true
-    },
-    "timestamp": "2025-08-18T14:32:53.711246"
+    "success": false,
+    "message": "SaaS status failed: HTTP 502",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:52.919884"
   },
   "Digital Manager - Daniel Info": {
-    "success": true,
-    "message": "Alle Informationen vollst\u00e4ndig",
-    "details": {
-      "daniel_name": "Daniel Oettel",
-      "daniel_birth": "22.06.1981",
-      "thomas_kaiser": "Thomas Kaiser",
-      "thomas_website": "https://t-kaiser.ergo.de/",
-      "services_count": 5
-    },
-    "timestamp": "2025-08-18T14:32:53.759663"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:52.926063"
   },
   "Digital Manager - Dashboard": {
-    "success": true,
-    "message": "Dashboard vollst\u00e4ndig funktional",
-    "details": {
-      "daniel_name": "Daniel Oettel",
-      "total_automations": 49,
-      "available_services": 5,
-      "thomas_kaiser_contact": true
-    },
-    "timestamp": "2025-08-18T14:32:53.790228"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:52.932097"
   },
   "Digital Manager - Klaviyo E-Mail": {
-    "success": true,
-    "message": "E-Mail Service funktional",
-    "details": {
-      "recipient": "test@zz-lobby-elite.de",
-      "subject": "Test Business E-Mail vom Digital Manager"
-    },
-    "timestamp": "2025-08-18T14:32:53.845786"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:52.939098"
   },
   "Digital Manager - Versicherungsanfrage": {
-    "success": true,
-    "message": "Versicherungsanfragen an Thomas Kaiser erfolgreich",
-    "details": {
-      "business_request": true,
-      "private_request": true,
-      "thomas_kaiser_email": "thomas.kaiser@ergo.de"
-    },
-    "timestamp": "2025-08-18T14:32:53.909063"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:52.945563"
   },
   "Digital Manager - KI-Steuerberechnung": {
-    "success": true,
-    "message": "Steuerberechnung erfolgreich",
-    "details": {
-      "documents_processed": 3,
-      "profit_loss": 27000.0,
-      "total_tax_burden": -294.6,
-      "recommendations": 1
-    },
-    "timestamp": "2025-08-18T14:32:53.961918"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:52.951808"
   },
   "Digital Manager - Rechtsdokumente": {
-    "success": true,
-    "message": "Alle Rechtsdokumente erfolgreich generiert",
-    "details": {
-      "agb": true,
-      "dsgvo": true,
-      "impressum": true,
-      "total_generated": 3
-    },
-    "timestamp": "2025-08-18T14:32:53.992505"
+    "success": false,
+    "message": "Nur 0/3 Dokumente generiert",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:52.969644"
   },
   "Autonomous System Status": {
-    "success": true,
-    "message": "Autonomes System vollst\u00e4ndig aktiv",
-    "details": {
-      "autonomy_level": "92%",
-      "ai_engine": "limited",
-      "legal_compliance": "active",
-      "daniel_integration": "complete"
-    },
-    "timestamp": "2025-08-18T14:32:54.040577"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:52.975746"
   },
   "Autonomous Business Metrics": {
-    "success": true,
-    "message": "Business-Metriken vollst\u00e4ndig verf\u00fcgbar",
-    "details": {
-      "revenue": 7500.0,
-      "transactions": 5,
-      "leads": 5,
-      "conversion_rate": 100.0,
-      "automation_level": "92%"
-    },
-    "timestamp": "2025-08-18T14:32:54.063066"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:52.982803"
   },
   "Autonomous Lead Processing": {
-    "success": true,
-    "message": "Lead vollautomatisch verarbeitet",
-    "details": {
-      "lead_id": "30c0c234-3fb7-4cb6-9823-61d0592d8409",
-      "offer_id": "bfba2b2a-b25b-4168-a14e-3b995b674281",
-      "conversion_estimate": 60,
-      "message": "Lead vollautomatisch verarbeitet - Angebot wird versendet"
-    },
-    "timestamp": "2025-08-18T14:32:54.136708"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:52.989519"
   },
   "Autonomous AI Sales Chat": {
-    "success": true,
-    "message": "AI-Sales-Chat funktional",
-    "details": {
-      "conversation_id": "lead-12345",
-      "sales_stage": null,
-      "suggested_action": null,
-      "response_length": 31
-    },
-    "timestamp": "2025-08-18T14:32:54.144590"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:52.996019"
   },
   "Autonomous Transaction Processing": {
-    "success": true,
-    "message": "Transaktion vollautomatisch verarbeitet",
-    "details": {
-      "transaction_id": "f678ad5a-60b8-4af5-8b57-59d21ab3437e",
-      "invoice_id": "ZZL-20250818-23ADBA4E",
-      "net_amount": 1500.0,
-      "tax_amount": 285.0,
-      "gross_amount": 1785.0,
-      "steuer_id_integration": "DE4535548228"
-    },
-    "timestamp": "2025-08-18T14:32:54.166373"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.002835"
   },
   "Self-Optimizing System Health": {
-    "success": true,
-    "message": "95% Autonomie erreicht - 6/6 Engines aktiv",
-    "details": {
-      "autonomy_level": "95%",
-      "overall_health": "excellent",
-      "active_engines": 6,
-      "system_uptime": "99.8%"
-    },
-    "timestamp": "2025-08-18T14:32:54.214988"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.008949"
   },
   "Self-Optimizing Performance Metrics": {
-    "success": true,
-    "message": "Performance-Metriken vollst\u00e4ndig verf\u00fcgbar",
-    "details": {
-      "revenue_growth": "28.5%",
-      "conversion_improvement": "15.2%",
-      "efficiency_score": 94.2,
-      "autonomy_level": "95%"
-    },
-    "timestamp": "2025-08-18T14:32:54.222490"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.017997"
   },
   "Self-Optimizing Full Cycle": {
-    "success": true,
-    "message": "Kompletter Optimierungszyklus erfolgreich - 6/6 Optimierungen",
-    "details": {
-      "cycle_id": "7edf6719-ebb6-41a2-a5ad-4f002a141231",
-      "optimizations_completed": 6,
-      "optimization_score": 15.5,
-      "estimated_revenue_increase": "20.103710397256584%"
-    },
-    "timestamp": "2025-08-18T14:32:54.400746"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.023838"
   },
   "Self-Optimizing A/B-Tests": {
-    "success": true,
-    "message": "A/B-Tests erfolgreich gestartet - 4 Tests aktiv",
-    "details": {
-      "test_id": "51391c78-be98-4e02-b4b8-45069eb1b9e9",
-      "total_tests": 4,
-      "email_subject_tests": 1,
-      "test_types": [
-        "pricing",
-        "landing_page",
-        "cta_button",
-        "email_subject"
-      ]
-    },
-    "timestamp": "2025-08-18T14:32:54.510495"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.029739"
   },
   "Self-Optimizing Budget Allocation": {
-    "success": true,
-    "message": "Performance-basierte Budget-Verteilung erfolgreich - \u20ac2000.0 Budget optimiert",
-    "details": {
-      "allocation_id": "d931af33-ff41-4a61-823e-ef0de21cd512",
-      "total_budget": 2000.0,
-      "campaigns_optimized": 3,
-      "average_roi": 4.2,
-      "optimization_actions": 2
-    },
-    "timestamp": "2025-08-18T14:32:54.519049"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.036396"
   },
   "Self-Optimizing Viral Content": {
-    "success": true,
-    "message": "Viral-Content-Optimierung erfolgreich - 3 Strategien implementiert",
-    "details": {
-      "optimization_id": "7b7f74df-4f5e-4dbd-acc6-f0e79c7a4e29",
-      "viral_strategies": 3,
-      "implementation_actions": 3,
-      "expected_reach_increase": 1043
-    },
-    "timestamp": "2025-08-18T14:32:54.526878"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.042084"
   },
   "Self-Optimizing Niche Expansion": {
-    "success": true,
-    "message": "Multi-Nischen-Expansion erfolgreich - 3 neue Chancen identifiziert",
-    "details": {
-      "analysis_id": "4a42115c-4818-4a8f-a39b-0e85b1cbb221",
-      "potential_niches": 4,
-      "expansion_opportunities": 3,
-      "implementation_plans": 3
-    },
-    "timestamp": "2025-08-18T14:32:54.535154"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.047831"
   },
   "Self-Optimizing Competitive Analysis": {
-    "success": true,
-    "message": "Competitive Intelligence erfolgreich - 3 Konkurrenten analysiert",
-    "details": {
-      "analysis_id": "e3392ef2-d773-4068-8845-ca3893c98797",
-      "competitors_analyzed": 3,
-      "market_gaps_found": 2,
-      "strategic_recommendations": 2
-    },
-    "timestamp": "2025-08-18T14:32:54.543460"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.056324"
   },
   "Self-Optimizing Market Opportunities": {
-    "success": true,
-    "message": "Market-Opportunity-Detection erfolgreich - 2 Chancen erkannt",
-    "details": {
-      "analysis_id": "1803846b-7136-4c72-8b06-17dc66d1812c",
-      "opportunities_detected": 2,
-      "market_trends": 2,
-      "revenue_potential": 7112,
-      "immediate_actions": 1
-    },
-    "timestamp": "2025-08-18T14:32:54.592466"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.062741"
   },
   "Self-Optimizing Dashboard": {
-    "success": true,
-    "message": "Optimization Dashboard vollst\u00e4ndig - 95% Autonomie",
-    "details": {
-      "dashboard_id": "f7e14a09-10a7-40b5-aa07-b8d02187a485",
-      "autonomy_level": "95%",
-      "overall_health": "excellent",
-      "active_ab_tests": 0,
-      "optimizations_this_month": 5
-    },
-    "timestamp": "2025-08-18T14:32:54.603667"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.069570"
   },
   "Production Daniel Verification": {
-    "success": true,
-    "message": "Echte Steuer-IDs erfolgreich verifiziert",
-    "details": {
-      "steuer_id": "69 377 041 825",
-      "ust_id": "DE4535548228",
-      "name": "Daniel Oettel",
-      "autonomy_level": "87%",
-      "production_ready": true
-    },
-    "timestamp": "2025-08-18T14:32:54.651284"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.076089"
   },
   "Production Status": {
-    "success": true,
-    "message": "System bereit f\u00fcr Launch",
-    "details": {
-      "status": "not_launched",
-      "message": "System noch nicht gestartet"
-    },
-    "timestamp": "2025-08-18T14:32:54.703159"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.082186"
   },
   "Production Launch": {
-    "success": true,
-    "message": "Production Launch erfolgreich - 5/6 Schritte abgeschlossen",
-    "details": {
-      "launch_id": "d56fe44d-9ed1-47ad-8a1a-b140439e19a0",
-      "system_status": "LIVE - MONEY MAKING ACTIVE",
-      "autonomy_level": "87%",
-      "steps_completed": 5,
-      "tax_verification": true,
-      "paypal_ready": true,
-      "marketing_active": true
-    },
-    "timestamp": "2025-08-18T14:32:54.724105"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.088783"
   },
   "Production Start Money Generation": {
-    "success": true,
-    "message": "Geldgenerierung erfolgreich gestartet",
-    "details": {
-      "activation_id": "5e2d1c92-0b55-4d23-982c-6e26dd86271b",
-      "steuer_integration": true,
-      "immediate_actions": 3,
-      "first_24h_target": 497,
-      "first_week_target": 2485,
-      "automation_status": "LIVE"
-    },
-    "timestamp": "2025-08-18T14:32:54.746000"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.094383"
   },
   "Production Live Dashboard": {
-    "success": true,
-    "message": "Live Dashboard vollst\u00e4ndig funktional",
-    "details": {
-      "dashboard_id": "bc7d22ff-138a-4ef6-884c-13606d64ee22",
-      "system_status": "LIVE - MONEY MAKING ACTIVE",
-      "daniel_steuer_id": "69 377 041 825",
-      "daniel_ust_id": "DE4535548228",
-      "today_revenue": 1491.0,
-      "autonomy_level": "87%",
-      "system_uptime": "99.8%"
-    },
-    "timestamp": "2025-08-18T14:32:54.754462"
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.100629"
+  },
+  "Hyper-Swarm Status": {
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.106677"
+  },
+  "Hyper-Swarm Activation": {
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.112871"
+  },
+  "Hyper-Swarm Performance": {
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.118265"
+  },
+  "Hyper-Swarm Content Generation": {
+    "success": false,
+    "message": "Nur 0/4 Content-Generierungen erfolgreich",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.144774"
+  },
+  "Hyper-Swarm Dashboard": {
+    "success": false,
+    "message": "HTTP 502: ",
+    "details": {},
+    "timestamp": "2025-08-23T00:32:53.151546"
   }
 }
