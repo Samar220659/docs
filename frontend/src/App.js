@@ -33,6 +33,7 @@ function App() {
           <Route path="/digital-manager" element={<DigitalManager />} />
           <Route path="/autonomous-hub" element={<AutonomousHub />} />
           <Route path="/production-launch" element={<ProductionLaunch />} />
+          <Route path="/hyper-swarm" element={<HyperSwarm />} />
         </Routes>
         <Toaster />
       </BrowserRouter>
