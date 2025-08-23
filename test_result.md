@@ -120,6 +120,18 @@ backend:
         agent: "testing"
         comment: "✅ TESTED: Server responding correctly at https://zz-lobby-elite-2.preview.emergentagent.com/api. All core API endpoints functional including dashboard, analytics, automations, and SaaS status. CORS configured properly."
 
+  - task: "Hyper-Swarm Ref-Cash-System Backend"
+    implemented: true
+    working: true
+    file: "/app/backend/hyper_swarm_engine.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Complete Hyper-Swarm backend system implemented with Telegram automation, 4 regional crews, Freecash referral integration, and ZZ-Lobby integration. Router included in server.py. Ready for testing."
+
   - task: "PayPal Integration"
     implemented: true
     working: true
