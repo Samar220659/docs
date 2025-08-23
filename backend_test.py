@@ -1674,6 +1674,12 @@ class BackendTester:
             ("Production Launch", self.test_production_launch),
             ("Production Start Money Generation", self.test_production_start_money_generation),
             ("Production Live Dashboard", self.test_production_live_dashboard),
+            # Hyper-Swarm Ref-Cash-System Tests - NEW MAIN REVENUE SYSTEM
+            ("Hyper-Swarm Status", self.test_hyper_swarm_status),
+            ("Hyper-Swarm Activation", self.test_hyper_swarm_activation),
+            ("Hyper-Swarm Performance", self.test_hyper_swarm_performance),
+            ("Hyper-Swarm Content Generation", self.test_hyper_swarm_content_generation),
+            ("Hyper-Swarm Dashboard", self.test_hyper_swarm_dashboard),
         ]
         
         passed = 0
